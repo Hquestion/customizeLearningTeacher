@@ -1,0 +1,162 @@
+<div class="course-manage">
+    <div class="row">
+        <div class="pull-left col-md-3">
+            <div class="portlet light bordered list-group">
+                <dl>
+                    <dt ng-repeat="cate in data.courseCateList track by $index">
+                        <div class="cate-name">
+                            <i class="glyphicon glyphicon-folder-close"></i><span ng-bind="cate.CourseCategoryName"></span>
+                        </div>
+                        <dl class="list-group">
+                            <dt ng-repeat="course in cate.courseList track by $index">
+                                <div class="course-name" ng-bind="course.CourseName"></div>
+                            </dt>
+                        </dl>
+                    </dt>
+                </dl>
+                <div class="btn btn-success">添加课程</div>
+            </div>
+        </div>
+        <div class="overflow-h col-md-9">
+            <div class="portlet light bordered">
+                <h4>
+                    <span ng-show="data.currentCourse && data.currentCourse.FlnkID">课程详情</span>
+                    <span ng-show="!data.currentCourse || !data.currentCourse.FlnkID">添加课程</span>
+                </h4>
+                <tabset>
+                    <tab heading="课程设置">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col col-md-4">
+                                    <label for="course-cate">课程类别</label>
+                                    <select ng-options="courseCate.FlnkID as courseCate.CourseCategoryName for courseCate in data.courseCateList"
+                                            ng-model="data.currentCourse.CourseCategoryFID" id="course-cate"></select>
+                                </div>
+                                <div class="col col-md-4">
+                                    <label for="course-cate">课程名称</label>
+                                    <input type="text" ng-model="data.currentCourse.CourseName" id="course-name"/>
+                                </div>
+                                <div class="col col-md-4">
+                                    <label for="course-date">创建日期</label>
+                                    <input type="text" id="course-date" disabled ng-model="data.currentCourse.CreateTime">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label>负责老师</label>
+                                    <select ng-options="teacher.FlnkID as teacher.XM for teacher in teacherList"
+                                            ng-model="data.currentCourse.HeadTeacherFID"></select>
+                                </div>
+                                <div class="col-md-9">
+                                    <label>协同老师</label>
+                                    <span class="label label-primary" ng-repeat="helpTeacer in data.currentCourse.helpTeacehrList track by $index">
+                                        {{helpTeacher.XM}}
+                                        <i class="glyphicon glyphicon-remove-circle"></i>
+                                    </span>
+                                    <span class="glyphicon glyphicon-plus text-success"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label>课程时长</label>
+                                    <input type="number" placeholder="不填表示不限时长" ng-model="data.currentCourse.CourseDuration">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="colse-on-end">到期关闭</label>
+                                    <input type="checkbox" id="colse-on-end" ng-model="data.currentCourse.IsExpireClose">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label for="is-cooperation-task">协作任务</label>
+                                    <input type="checkbox" id="is-cooperation-task" ng-model="data.currentCourse.IsWorkTeam">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="groupNum">小组人数</label>
+                                    <input type="number" id="groupNum" ng-model="data.currentCourse.GroupNum" placeholder="不填表示不限制人数">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="is-control-groupNum">人数控制</label>
+                                    <input type="checkbox" id="is-control-groupNum" ng-model="data.currentCourse.IsNumControl">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>课程开放时间</label>
+                                    <div style="display: inline-block;width:30%;">
+                                    <span class="input-group">
+                                        <input type="text" class="form-control" uib-datepicker-popup="yyyy-MM-dd" ng-model="data.currentCourse.OpenStartTime"
+                                               is-open="data.currentCourse.startTimeopened" ng-required="true" close-text="关闭"
+                                               alt-input-formats="altInputFormats" />
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default" ng-click="openStartDatePicker()"><i class="glyphicon glyphicon-calendar"></i></button>
+                                        </span>
+                                    </span>
+                                    </div>
+                                    <label>至</label>
+                                    <div style="display: inline-block;width:30%;">
+                                    <span class="input-group">
+                                        <input type="text" class="form-control" uib-datepicker-popup="yyyy-MM-dd" ng-model="data.currentCourse.OpenEndTime"
+                                               is-open="data.currentCourse.startTimeopened" ng-required="true" close-text="关闭"
+                                               alt-input-formats="altInputFormats" />
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default" ng-click="openEndDatePicker()"><i class="glyphicon glyphicon-calendar"></i></button>
+                                        </span>
+                                    </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label>排序码</label>
+                                    <span>
+                                        <span class="glyphicon glyphicon-minus"></span>
+                                        <input type="number" ng-model="data.currentCourse.SortCode">
+                                        <span class="glyphicon glyphicon-plus"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label>审核状态</label>
+                                    <input type="checkbox" ng-model="data.currentCourse.IsAudited">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <div class="btn btn-success" ng-click="saveCourse()">保存课程设置</div>
+                        </div>
+                    </tab>
+                    <tab heading="早知道">
+                        <div class="portlet light bordered">
+                            <div id="prev-know-editor">
+
+                            </div>
+                        </div>
+                    </tab>
+                    <tab heading="会安排" ng-show="data.currentCourse && data.currentCourse.FlnkID">
+
+                    </tab>
+                    <tab heading="能落实">
+
+                    </tab>
+                    <tab heading="有反思">
+
+                    </tab>
+                </tabset>
+            </div>
+        </div>
+    </div>
+</div>

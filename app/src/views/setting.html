@@ -1,0 +1,80 @@
+<div class="setting">
+    <div class="row">
+        <div class="col col-md-4">
+            <div class="portlet light bordered">
+                <h4>课程类别</h4>
+                <div>
+                    <div class="form-group" ng-repeat="courseCate in courseCateList track by $index">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <input type="text" ng-model="courseCate.CourseCategoryName">
+                            </div>
+                            <div class="col-md-4">
+                                <select ng-options="teacher.FlnkID as teacher.XM for teacher in teacherList" ng-model="courseCate.HeadTeacher"></select>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="icon-trash"></span>
+                            </div>
+                            <div class="col-md-2">
+                                <i class="glyphicon glyphicon-arrow-up"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="btn btn-success btn-radius" ng-click="addCourseCate()">添加课程类别</div>
+                </div>
+            </div>
+        </div>
+        <div class="col col-md-4">
+            <div class="portlet light bordered">
+                <h4>会安排模板</h4>
+                <div>
+                    <div class="form-group" ng-repeat="arrangeTpl in arrangeTplList track by $index">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <input type="text" ng-model="arrangeTpl.SetItemName">
+                            </div>
+                            <div class="col-md-2">
+                                <span class="icon-trash"></span>
+                            </div>
+                            <div class="col-md-2">
+                                <i class="glyphicon glyphicon-arrow-up"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="btn btn-success btn-radius" ng-click="addArrangeTpl()">添加会安排模板</div>
+                </div>
+            </div>
+        </div>
+        <div class="col col-md-4">
+            <div class="portlet light bordered">
+                <h4>有反思模板</h4>
+                <div>
+                    <div class="form-group" ng-repeat="thinkTpl in thinkTplList track by $index">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <input type="text" ng-model="thinkTpl.SetItemName">
+                            </div>
+                            <div class="col-md-2">
+                                <span class="icon-trash"></span>
+                            </div>
+                            <div class="col-md-2">
+                                <i class="glyphicon glyphicon-arrow-up"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="btn btn-success btn-radius" ng-click="addThinkTpl()">添加有反思模板</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light bordered">
+                <h4>评价级别设置</h4>
+                <div class="form-group">
+                    <star current="schoolStarValCfg.StarValue" max="10" click-cb="onSetStarVal(data)"></star>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

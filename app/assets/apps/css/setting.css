@@ -1,0 +1,4 @@
+.setting input, .setting select {
+    width: 100%;
+    max-width: 100%;
+}
