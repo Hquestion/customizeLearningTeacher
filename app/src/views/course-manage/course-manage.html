@@ -139,20 +139,50 @@
                             <div class="btn btn-success" ng-click="saveCourse()">保存课程设置</div>
                         </div>
                     </tab>
-                    <tab heading="早知道">
-                        <div class="portlet light bordered">
-                            <div id="prev-know-editor">
+                    <tab heading="早知道" ng-show="data.currentCourse && data.currentCourse.FlnkID" select="initEditor()">
+                        <div class="portlet light">
+                            <textarea id="prev-know-editor" name="prev-konw-editor" class="ckeditor">
 
+                            </textarea>
+                        </div>
+                    </tab>
+                    <tab heading="会安排" ng-show="data.currentCourse && data.currentCourse.FlnkID" select="initArrange()">
+                        <div class="portlet light">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <dl class="arrange-list">
+                                        <dt ng-repeat="arrange in data.arrangeList track by $index">
+                                            <div class="arrange-name" ng-bind="arrange.ArrangeName"></div>
+                                            <div ng-if="arrange.modelList && arrange.modelList[0]">
+                                                <ul class="arrange-list" ng-show="arrange.modelList && arrange.modelList[0].ArrangeType === 2">
+                                                    <li ng-repeat="arrangeModel in arrange.modelList track by $index">
+                                                        <div>
+                                                            <textarea ng-model="arrangeModel.ArrangeContent" class="ckeditor" name="arrangeModel.FlnkID"></textarea>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                                <div ng-show="arrange.modelList && arrange.modelList[0].ArrangeType === 1">
+                                                    <textarea placeholder="请输入会安排内容" ng-model="arrange.ArrangeContent"></textarea>
+                                                </div>
+                                            </div>
+                                            <div ng-if="!arrange.modelList || !arrange.modelList[0]">
+                                                <textarea placeholder="请输入会安排内容" ng-model="arrange.InputArrangeContent"></textarea>
+                                            </div>
+                                        </dt>
+                                    </dl>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="btn btn-success" ng-click="saveArrange()">保存设置</div>
+                                </div>
                             </div>
                         </div>
                     </tab>
-                    <tab heading="会安排" ng-show="data.currentCourse && data.currentCourse.FlnkID">
+                    <tab heading="能落实" ng-show="data.currentCourse && data.currentCourse.FlnkID">
 
                     </tab>
-                    <tab heading="能落实">
-
-                    </tab>
-                    <tab heading="有反思">
+                    <tab heading="有反思" ng-show="data.currentCourse && data.currentCourse.FlnkID">
 
                     </tab>
                 </tabset>
