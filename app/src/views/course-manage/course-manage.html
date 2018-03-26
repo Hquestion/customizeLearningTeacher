@@ -1,6 +1,6 @@
 <div class="course-manage">
     <div class="row">
-        <div class="pull-left col-md-3">
+        <div class="pull-left col-md-3 course-tree">
             <div class="portlet light bordered list-group">
                 <dl>
                     <dt ng-repeat="cate in data.courseCateList track by $index">
@@ -154,15 +154,15 @@
                                         <dt ng-repeat="arrange in data.arrangeList track by $index">
                                             <div class="arrange-name" ng-bind="arrange.ArrangeName"></div>
                                             <div ng-if="arrange.modelList && arrange.modelList[0]">
-                                                <ul class="arrange-list" ng-show="arrange.modelList && arrange.modelList[0].ArrangeType === 2">
+                                                <ul class="arrange-list" ng-show="arrange.modelList && arrange.modelList[0].ArrangeType === 1">
                                                     <li ng-repeat="arrangeModel in arrange.modelList track by $index">
                                                         <div>
                                                             <textarea ng-model="arrangeModel.ArrangeContent" class="ckeditor" name="arrangeModel.FlnkID"></textarea>
                                                         </div>
                                                     </li>
                                                 </ul>
-                                                <div ng-show="arrange.modelList && arrange.modelList[0].ArrangeType === 1">
-                                                    <textarea placeholder="请输入会安排内容" ng-model="arrange.ArrangeContent"></textarea>
+                                                <div ng-show="arrange.modelList && arrange.modelList[0].ArrangeType === 0">
+                                                    <textarea placeholder="请输入会安排内容" ng-model="arrange.modelList[0].ArrangeContent"></textarea>
                                                 </div>
                                             </div>
                                             <div ng-if="!arrange.modelList || !arrange.modelList[0]">
@@ -182,8 +182,23 @@
                     <tab heading="能落实" ng-show="data.currentCourse && data.currentCourse.FlnkID">
 
                     </tab>
-                    <tab heading="有反思" ng-show="data.currentCourse && data.currentCourse.FlnkID">
-
+                    <tab heading="有反思" ng-show="data.currentCourse && data.currentCourse.FlnkID" select="initThink()">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <ul>
+                                    <li ng-repeat="remark in data.courseRemarkList track by $index">
+                                        <div class="remark-name">{{remark.ReflectName}}</div>
+                                        <div class="row remark-item" ng-repeat="remarkModel in remark.modelList track by $index">
+                                            <div class="col-md-3 remarkModelName" ng-bind="remarkModel.ReflectItemName"></div>
+                                            <div class="col-md-9">
+                                                <input type="text" ng-model="remarkModel.ReflectItemContent">
+                                            </div>
+                                        </div>
+                                        <div class="btn btn-success">添加反思内容</div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                     </tab>
                 </tabset>
             </div>

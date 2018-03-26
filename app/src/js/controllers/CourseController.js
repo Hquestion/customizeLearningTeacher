@@ -1,4 +1,4 @@
-angular.module('MetronicApp').controller('CourseController', function($rootScope, $scope, $q, httpService) {
+angular.module('MetronicApp').controller('CourseController', function($rootScope, $scope, $q, httpService, SweetAlert) {
     $scope.data = {
         courseCateList: [],
         currentCourse: {
@@ -95,6 +95,17 @@ angular.module('MetronicApp').controller('CourseController', function($rootScope
         }).then(function(res){
             $scope.data.arrangeList = res;
         });
+    };
+
+    $scope.initThink = function(){
+        if($scope.data.courseRemarkList) {
+            return;
+        }
+        httpService.get('api/CourseManage/GetListCourseReflectConfigDetails', {
+            courseFID: $scope.data.currentCourse.FlnkID
+        }).then(function(res){
+            $scope.data.courseRemarkList = res;
+        });
     }
 
     $scope.saveArrange = function(){
@@ -122,7 +133,7 @@ angular.module('MetronicApp').controller('CourseController', function($rootScope
                         "ArrangeFID": item.FlnkID || '',
                         "IsCheck": false,
                         "ArrangeContent": modelItem.ArrangeContent,
-                        "ArrangeType": modelItem.ArrangeType || 1
+                        "ArrangeType": modelItem.ArrangeType || 0
                     }
                     arrangeModel.push(newModelItem);
                 })
@@ -137,14 +148,16 @@ angular.module('MetronicApp').controller('CourseController', function($rootScope
                     "ArrangeFID": item.FlnkID || '',
                     "IsCheck": false,
                     "ArrangeContent": item.InputArrangeContent,
-                    "ArrangeType": 1
+                    "ArrangeType": 0
                 })
             }
             arrangeObj.modelList = arrangeModel;
             param.push(arrangeObj);
         });
         httpService.post('api/CourseManage/SaveC_CourseArrangeInfo', param).then(function(res){
-            console.log(res)
+            SweetAlert.success('保存步骤成功！', {
+                title: ''
+            });
         })
     };
 });
