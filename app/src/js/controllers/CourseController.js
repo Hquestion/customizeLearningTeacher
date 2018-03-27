@@ -1,4 +1,18 @@
 angular.module('MetronicApp').controller('CourseController', function($rootScope, $scope, $q, httpService, SweetAlert) {
+    initDom();
+
+    function initDom() {
+        // $scope.$on('DOMContentLoaded', function(){
+            if (!$().bootstrapSwitch) {
+                return;
+            }
+            $('.make-switch').bootstrapSwitch();
+        // });
+    }
+
+    $scope.onInit = function(){
+        $('.make-switch').bootstrapSwitch();
+    }
     $scope.data = {
         courseCateList: [],
         currentCourse: {
@@ -77,6 +91,19 @@ angular.module('MetronicApp').controller('CourseController', function($rootScope
                 //修改成功
             }
         })
+    };
+
+    $scope.toggleCategory = function(cate){
+        cate.isOpend = !cate.isOpend;
+    };
+
+    $scope.setCurrentCourse = function(e, course) {
+        e.stopPropagation();
+        $scope.data.currentCourse = course;
+    };
+
+    $scope.addCourse = function(){
+        $scope.data.currentCourse = null;
     };
 
     $scope.initEditor = function(){

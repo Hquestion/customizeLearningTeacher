@@ -1,4 +1,4 @@
-#editor {
+.course-manage #editor {
     width: 100%;
     height: 500px;
     overflow: auto;
@@ -8,4 +8,35 @@
     .course-manage .course-tree {
         width: 100%;
     }
+}
+.course-manage .course-tree dl dt {
+    font-weight: normal;
+}
+.course-manage .course-tree dl dt .cate-name span, .course-manage .course-tree dl dt .course-name span{
+    margin-left: 10px;
+}
+.course-manage .course-tree dl dt .cate-name {
+    padding: 15px;
+    cursor: pointer;
+}
+.course-manage .course-tree dl dt .list-group {
+    padding-left: 25px;
+    background: #fefefe;
+    margin-bottom: 0;
+    display: none;
+}
+.course-manage .course-tree dl dt.course-category-item.opend .list-group{
+    display: block;
+}
+.course-manage .course-tree dl dt .list-group .course-name {
+    padding: 10px;
+    cursor: pointer;
+}
+.course-manage .course-tree dl dt .list-group .course-item.active .course-name{
+    color: #0b94ea;
+}
+.course-manage .course-tree .course-category-item.active .cate-name {
+    color: #0b94ea;
+    background: #f2f2f2;
+    border-left: 4px solid #0b94ea;
 }
