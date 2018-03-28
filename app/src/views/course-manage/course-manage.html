@@ -22,17 +22,17 @@
                         </dl>
                     </dt>
                 </dl>
-                <div class="btn btn-success btn-lg btn-block" ng-click="addCourse()">添加课程</div>
+                <div class="btn btn-success btn-lg btn-block" ng-click="addCourse()"><i class="glyphicon glyphicon-plus"></i>添加课程</div>
             </div>
         </div>
         <div class="overflow-h col-md-9">
-            <div class="portlet light bordered">
+            <div class="portlet light bordered" style="padding-bottom: 12rem;">
                 <h4>
                     <span ng-show="data.currentCourse && data.currentCourse.FlnkID">课程详情</span>
                     <span ng-show="!data.currentCourse || !data.currentCourse.FlnkID">添加课程</span>
                 </h4>
                 <tabset>
-                    <tab heading="课程设置">
+                    <tab heading="课程设置" active="courseSettingTabActive" select="activateTab('1')">
                         <div class="form-group">
                             <div class="row">
                                 <div class="col col-md-5">
@@ -41,7 +41,7 @@
                                             <label for="course-cate">课程类别</label>
                                         </div>
                                         <div class="col-md-7">
-                                            <select ng-options="courseCate.FlnkID as courseCate.CourseCategoryName for courseCate in data.courseCateList"
+                                            <select class="input-md form-control" ng-options="courseCate.FlnkID as courseCate.CourseCategoryName for courseCate in data.courseCateList"
                                                     ng-model="data.currentCourse.CourseCategoryFID" id="course-cate"></select>
                                         </div>
                                     </div>
@@ -52,7 +52,7 @@
                                             <label for="course-cate">课程名称</label>
                                         </div>
                                         <div class="col-md-7">
-                                            <input type="text" ng-model="data.currentCourse.CourseName" id="course-name"/>
+                                            <input class="input-md form-control" type="text" ng-model="data.currentCourse.CourseName" id="course-name"/>
                                         </div>
                                     </div>
                                 </div>
@@ -70,7 +70,7 @@
                                             <label>负责老师</label>
                                         </div>
                                         <div class="col-md-7">
-                                            <select ng-options="teacher.FlnkID as teacher.XM for teacher in teacherList"
+                                            <select  class="input-md form-control" ng-options="teacher.FlnkID as teacher.XM for teacher in teacherList"
                                                     ng-model="data.currentCourse.HeadTeacherFID"></select>
                                         </div>
                                     </div>
@@ -83,9 +83,9 @@
                                         <div class="col-md-7">
                                             <span class="label label-primary" ng-repeat="helpTeacer in data.currentCourse.helpTeacehrList track by $index">
                                         {{helpTeacher.XM}}
-                                        <i class="glyphicon glyphicon-remove-circle"></i>
+                                        <a class="glyphicon glyphicon-remove-circle"></a>
                                     </span>
-                                            <span class="glyphicon glyphicon-plus text-success"></span>
+                                            <a class="glyphicon glyphicon-plus text-success"></a>
                                         </div>
                                     </div>
                                 </div>
@@ -99,7 +99,7 @@
                                             <label>课程时长</label>
                                         </div>
                                         <div class="col-md-7">
-                                            <input type="number" placeholder="不填表示不限时长" ng-model="data.currentCourse.CourseDuration">
+                                            <input class="input-md form-control" type="number" placeholder="不填表示不限时长" ng-model="data.currentCourse.CourseDuration">
                                         </div>
                                     </div>
                                 </div>
@@ -109,7 +109,7 @@
                                             <label for="colse-on-end">到期关闭</label>
                                         </div>
                                         <div class="col-md-7">
-                                            <input type="checkbox" class="make-switch" id="colse-on-end" ng-model="data.currentCourse.IsExpireClose">
+                                            <input bs-switch type="checkbox" class="make-switch" id="colse-on-end" ng-model="data.currentCourse.IsExpireClose">
                                         </div>
                                     </div>
                                 </div>
@@ -123,7 +123,7 @@
                                             <label for="is-cooperation-task">协作任务</label>
                                         </div>
                                         <div class="col-md-7">
-                                            <input type="checkbox" class="make-switch" id="is-cooperation-task" ng-model="data.currentCourse.IsWorkTeam">
+                                            <input bs-switch type="checkbox" class="make-switch" id="is-cooperation-task" ng-model="data.currentCourse.IsWorkTeam">
                                         </div>
                                     </div>
                                 </div>
@@ -137,7 +137,7 @@
                                             <label for="groupNum">小组人数</label>
                                         </div>
                                         <div class="col-md-7">
-                                            <input type="number" id="groupNum" ng-model="data.currentCourse.GroupNum" placeholder="不填表示不限制人数">
+                                            <input class="input-md form-control" type="number" id="groupNum" ng-model="data.currentCourse.GroupNum" placeholder="不填表示不限制人数">
                                         </div>
                                     </div>
                                 </div>
@@ -147,7 +147,7 @@
                                             <label for="is-control-groupNum">人数控制</label>
                                         </div>
                                         <div class="col-md-7">
-                                            <input type="checkbox" class="make-switch" id="is-control-groupNum" ng-model="data.currentCourse.IsNumControl">
+                                            <input bs-switch type="checkbox" class="make-switch" id="is-control-groupNum" ng-model="data.currentCourse.IsNumControl">
                                         </div>
                                     </div>
                                 </div>
@@ -161,14 +161,9 @@
                                             <label>开放时间</label>
                                         </div>
                                         <div class="col-md-7">
-                                            <span class="input-group">
-                                                <input type="text" class="form-control" uib-datepicker-popup="yyyy-MM-dd" ng-model="data.currentCourse.OpenStartTime"
-                                                   is-open="data.currentCourse.startTimeopened" ng-required="true" close-text="关闭"
-                                                   alt-input-formats="altInputFormats" />
-                                                <span class="input-group-btn">
-                                                    <button type="button" class="btn btn-default" ng-click="openStartDatePicker()"><i class="glyphicon glyphicon-calendar"></i></button>
-                                                </span>
-                                            </span>
+                                            <datepicker2 date-format="yyyy-MM-dd">
+                                                <input class="input-md form-control" ng-model="data.currentCourse.OpenStartTime" type="text"/>
+                                            </datepicker2>
                                         </div>
                                     </div>
                                 </div>
@@ -178,30 +173,25 @@
                                             <label>至</label>
                                         </div>
                                         <div class="col-md-7">
-                                            <span class="input-group">
-                                        <input type="text" class="form-control" uib-datepicker-popup="yyyy-MM-dd" ng-model="data.currentCourse.OpenEndTime"
-                                               is-open="data.currentCourse.startTimeopened" ng-required="true" close-text="关闭"
-                                               alt-input-formats="altInputFormats" />
-                                        <span class="input-group-btn">
-                                            <button type="button" class="btn btn-default" ng-click="openEndDatePicker()"><i class="glyphicon glyphicon-calendar"></i></button>
-                                        </span>
-                                    </span>
+                                            <datepicker2 date-format="yyyy-MM-dd">
+                                                <input class="input-md form-control" ng-model="data.currentCourse.OpenEndTime" type="text"/>
+                                            </datepicker2>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" style="display: none">
                             <div class="row">
                                 <div class="col-md-5">
                                     <div class="row">
                                         <div class="col-md-3">
                                             <label>排序码</label>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-7">
                                             <span>
                                                 <span class="glyphicon glyphicon-minus"></span>
-                                                <input type="number" ng-model="data.currentCourse.SortCode">
+                                                <input class="input-md form-control" type="number" ng-model="data.currentCourse.SortCode">
                                                 <span class="glyphicon glyphicon-plus"></span>
                                             </span>
                                         </div>
@@ -217,7 +207,7 @@
                                             <label>审核状态</label>
                                         </div>
                                         <div class="col-md-8">
-                                            <input type="checkbox" class="make-switch" ng-model="data.currentCourse.IsAudited">
+                                            <input bs-switch type="checkbox" class="make-switch" ng-model="data.currentCourse.IsAudited">
                                         </div>
                                     </div>
                                 </div>
@@ -225,66 +215,97 @@
                         </div>
                         <div class="form-actions">
                             <div class="btn btn-success" ng-click="saveCourse()">保存课程设置</div>
+                            <div class="btn btn-default" ng-show="data.currentCourse && data.currentCourse.FlnkID" ng-click="deleteCourse()">删除课程</div>
                         </div>
                     </tab>
-                    <tab heading="早知道" ng-show="data.currentCourse && data.currentCourse.FlnkID" select="initEditor()">
+                    <tab heading="早知道" active="prevKnowTabActive" ng-show="data.currentCourse && data.currentCourse.FlnkID" select="initEditor()">
                         <div class="portlet light">
-                            <textarea id="prev-know-editor" name="prev-konw-editor" class="ckeditor">
-
-                            </textarea>
+                            <div class="form-group">
+                                <textarea id="prev-know-editor" name="prev-konw-editor" class="ckeditor"></textarea>
+                            </div>
+                            <div class="form-actions">
+                                <div class="btn btn-success">保存</div>
+                            </div>
                         </div>
                     </tab>
-                    <tab heading="会安排" ng-show="data.currentCourse && data.currentCourse.FlnkID" select="initArrange()">
+                    <tab heading="会安排" active="arrangeTabActive" ng-show="data.currentCourse && data.currentCourse.FlnkID" select="initArrange()">
                         <div class="portlet light">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <dl class="arrange-list">
-                                        <dt ng-repeat="arrange in data.arrangeList track by $index">
-                                            <div class="arrange-name" ng-bind="arrange.ArrangeName"></div>
-                                            <div ng-if="arrange.modelList && arrange.modelList[0]">
-                                                <ul class="arrange-list" ng-show="arrange.modelList && arrange.modelList[0].ArrangeType === 1">
-                                                    <li ng-repeat="arrangeModel in arrange.modelList track by $index">
-                                                        <div>
-                                                            <textarea ng-model="arrangeModel.ArrangeContent" class="ckeditor" name="arrangeModel.FlnkID"></textarea>
-                                                        </div>
-                                                    </li>
-                                                </ul>
-                                                <div ng-show="arrange.modelList && arrange.modelList[0].ArrangeType === 0">
-                                                    <textarea placeholder="请输入会安排内容" ng-model="arrange.modelList[0].ArrangeContent"></textarea>
+                            <div class="form-group" ng-repeat="arrange in data.arrangeList track by $index">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <span>步骤{{$index + 1}}、</span>
+                                        <span class="arrange-name" ng-bind="arrange.ArrangeName"></span>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <div ng-if="arrange.modelList && arrange.modelList[0]">
+                                            <ul class="arrange-list" ng-show="arrange.modelList && arrange.modelList[0].ArrangeType === 1">
+                                                <li ng-repeat="arrangeModel in arrange.modelList track by $index">
+                                                    <span>选项{{$index + 1}}：</span><span ng-bind="arrangeModel.ArrangeContent"></span>
+                                                </li>
+                                            </ul>
+                                            <div ng-show="arrange.modelList && arrange.modelList[0].ArrangeType === 0">
+                                                <div ng-if="arrange.modelList[0].FlnkID || arrange.modelList[0].ArrangeContent" ng-bind="arrange.modelList[0].ArrangeContent"></div>
+                                                <div ng-if="!arrange.modelList[0].FlnkID && !arrange.modelList[0].ArrangeContent">
+                                                    暂无内容
                                                 </div>
                                             </div>
-                                            <div ng-if="!arrange.modelList || !arrange.modelList[0]">
-                                                <textarea placeholder="请输入会安排内容" ng-model="arrange.InputArrangeContent"></textarea>
-                                            </div>
-                                        </dt>
-                                    </dl>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <a class="glyphicon glyphicon-pencil" ng-click="editStep(arrange)"></a>
+                                        <a class="glyphicon glyphicon-trash"  ng-click="deleteStep(arrange)"></a>
+                                        <a class="glyphicon glyphicon-arrow-up"  ng-click="sortStep(arrange, $index)"></a>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="btn btn-success" ng-click="saveArrange()">保存设置</div>
-                                </div>
+                            <div class="form-actions">
+                                <div class="btn btn-default" ng-click="addStep()">添加会安排步骤</div>
+                                <div class="btn btn-success" ng-click="saveArrange()">保存设置</div>
                             </div>
                         </div>
                     </tab>
-                    <tab heading="能落实" ng-show="data.currentCourse && data.currentCourse.FlnkID">
+                    <!--<tab heading="能落实" active="practiceTabActive" ng-show="data.currentCourse && data.currentCourse.FlnkID" select="activateTab('4')">-->
 
-                    </tab>
-                    <tab heading="有反思" ng-show="data.currentCourse && data.currentCourse.FlnkID" select="initThink()">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <ul>
-                                    <li ng-repeat="remark in data.courseRemarkList track by $index">
-                                        <div class="remark-name">{{remark.ReflectName}}</div>
-                                        <div class="row remark-item" ng-repeat="remarkModel in remark.modelList track by $index">
-                                            <div class="col-md-3 remarkModelName" ng-bind="remarkModel.ReflectItemName"></div>
-                                            <div class="col-md-9">
-                                                <input type="text" ng-model="remarkModel.ReflectItemContent">
+                    <!--</tab>-->
+                    <tab heading="有反思" active="thinkTabActive" ng-show="data.currentCourse && data.currentCourse.FlnkID" select="initThink()">
+                        <div class="portlet light">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <ul>
+                                        <li ng-repeat="remark in data.courseRemarkList track by $index">
+                                            <div class="form-group">
+                                                <h5 class="remark-name">{{remark.ReflectName}}</h5>
                                             </div>
-                                        </div>
-                                        <div class="btn btn-success">添加反思内容</div>
-                                    </li>
-                                </ul>
+                                            <div class="form-group remark-item" ng-repeat="remarkModel in remark.modelList track by $index">
+                                                <div class="row">
+                                                    <div class="col-md-2 remarkModelName" ng-bind="'打分项' + ($index+1)"></div>
+                                                    <div class="col-md-8">
+                                                        <input type="text" class="input-md form-control" ng-model="remarkModel.ReflectItemName" ng-blur="saveThinkItem(remarkModel)">
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <a class="glyphicon glyphicon-trash" ng-click="deleteThinkItem(remarkModel)"></a>
+                                                        <a class="glyphicon glyphicon-arrow-up" ng-click="moveThinkItem(remarkModel, $index)"></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-2">添加打分项</div>
+                                                    <div class="col-md-9">
+                                                        <input type="text" class="input-md form-control" ng-class="{'red': remark.isTempContentEmpty}"
+                                                               placeholder="请输入打分项内容" ng-model="remark.tempItemContent" ng-blur="checkThinkTempItem(remark)">
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <a class="glyphicon glyphicon-plus" ng-click="addThinkItem(remark)"></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <div class="btn btn-success" ng-click="saveThink()">保存设置</div>
                             </div>
                         </div>
                     </tab>
@@ -293,3 +314,74 @@
         </div>
     </div>
 </div>
+
+<script type="text/ng-template" id="editArrangeStep">
+    <form class="form-horizontal" style="padding: 30px;">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <label class="col-md-4">
+                            <input bs-switch type="radio" ng-model="toEditArrange.arrangeMode" name="arrangeMode" value="1">&nbsp;文本
+                        </label>
+                        <label class="col-md-4">
+                            <input bs-switch type="radio" ng-model="toEditArrange.arrangeMode" name="arrangeMode" value="2">&nbsp;单选
+                        </label>
+                        <label class="col-md-4">
+                            <input bs-switch type="radio" ng-model="toEditArrange.arrangeMode" name="arrangeMode" value="3">&nbsp;多选
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-12">
+                    <input class="input-md form-control" type="text" ng-model="toEditArrange.ArrangeName" placeholder="请输入步骤名称">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-12">
+                    <div ng-show="toEditArrange.arrangeMode === '1'">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <textarea class="input-md form-control" type="text" ng-model="toEditArrange.modelList[0].ArrangeContent" placeholder="请输入步骤内容"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-show="toEditArrange.arrangeMode !== '1'">
+                        <ul>
+                            <li ng-repeat="model in toEditArrange.modelList track by $index" style="margin-bottom: 15px">
+                                <div class="row">
+                                    <div class="col-md-7">
+                                        <input class="input-md form-control" type="text" ng-model="model.ArrangeContent" placeholder="请输入选项内容">
+                                    </div>
+                                    <div class="col-md-5">
+                                        <i class="glyphicon glyphicon-trash"></i>
+                                        <div class="inline-block" ng-if="toEditArrange.arrangeMode === '2'">
+                                            <input bs-switch type="radio" name="optionSelected" ng-model="model.IsCheck">
+                                        </div>
+                                        <div class="inline-block" ng-if="toEditArrange.arrangeMode === '3'">
+                                            <input bs-switch type="checkbox" name="optionSelected" ng-model="model.IsCheck">
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="form-actions" style="margin-top: 15px;">
+                            <div class="btn btn-success" ng-click="addOption()">添加选项</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-actions">
+            <div class="row col-md-offset-4">
+                <div class="btn btn-md green" ng-click="doSave()">保存</div>
+                <div class="btn btn-md grey" ng-click="cancel()">取消</div>
+            </div>
+        </div>
+    </form>
+</script>

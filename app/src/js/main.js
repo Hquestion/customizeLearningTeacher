@@ -9,7 +9,8 @@ var MetronicApp = angular.module("MetronicApp", [
     "oc.lazyLoad",  
     "ngSanitize",
     "ngCookies",
-    'ng-sweet-alert'
+    'ng-sweet-alert',
+    'frapontillo.bootstrap-switch'
 ]); 
 
 /* Configure ocLazyLoader(refer: https://github.com/ocombe/ocLazyLoad) */
@@ -534,10 +535,11 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                         insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
                         files: [
                             'assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css',
+                            'assets/apps/css/angular.datepicker.css',
                             'assets/global/plugins/ckeditor/ckeditor.js',
                             'assets/apps/css/course-manage.css',
                             'assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js',
-
+                            'assets/apps/scripts/angular.datepicker.min.js',
                             'src/js/controllers/CourseController.js'
                         ]
                     });

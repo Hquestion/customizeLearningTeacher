@@ -40,3 +40,8 @@
     background: #f2f2f2;
     border-left: 4px solid #0b94ea;
 }
+ul, li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
