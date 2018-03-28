@@ -123,10 +123,8 @@ angular.module('MetronicApp', ['720kb.datepicker']).controller('CourseController
 
     $scope.initEditor = function(){
         $scope.activateTab('2');
-        if(!CKEDITOR.instances['prev-know-editor']) {
-            CKEDITOR.replace('prev-know-editor');
-        }
-    }
+        CKEDITOR.replace('prev-know-editor');
+    };
 
     $scope.initArrange = function(){
         $scope.activateTab('3');
