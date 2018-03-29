@@ -1,5 +1,14 @@
-angular.module('MetronicApp').controller('StudyCenterController', function($rootScope, $scope, $http, $timeout) {
-    $scope.data = {};
+angular.module('MetronicApp').controller('StudyCenterController', function($rootScope, $scope, $http, $timeout, httpService) {
+    $scope.data = {
+        currentGroup: '',
+        courseList: []
+    };
 
-    $http.get('')
+    httpService.get('api/CourseInfo/GetCourseInfoByTeacherID', {
+        teacherFID: $rootScope.userInfo.FlnkID
+    }).then(function(res){
+        $scope.data.courseList = res;
+    });
+
+    httpService.get('')
 });

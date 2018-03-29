@@ -2,16 +2,26 @@
     <div class="row">
         <div class="pull-left col-md-3">
             <div class="portlet light bordered">
-                <ul>
-                    <li ng-repeat="course in courseList track by $index">
-                        <div class="course-name" ng-bind="course.CourseName"></div>
-                        <ul>
-                            <li ng-repeat="group in courseGroups $track by $index">
-                                <div class="group-name" ng-bind="group.groupName"></div>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
+                <dl>
+                    <dt class="course-item" ng-repeat="course in data.courseList track by $index"
+                        ng-class="{'active': data.currentGroup.CourseFID === course.FlnkID, 'opend': !!course.isOpend}"
+                        ng-click="toggleCourse(course)">
+                        <div class="course-name">
+                            <i class="glyphicon" ng-class="!!course.isOpend ? 'glyphicon-folder-open': 'glyphicon-folder-close'"></i>
+                            <span ng-bind="course.CourseName"></span>
+                            <i class="glyphicon pull-right" ng-class="!!course.isOpend ? 'glyphicon-menu-down': 'glyphicon-menu-left'"></i>
+                        </div>
+                        <dl class="list-group">
+                            <dt class="group-item" ng-repeat="group in course.courseGroups track by $index"
+                                ng-class="data.currentGroup.FlnkID === group.FlnkID ? 'active': ''"
+                                ng-click="setCurrentGroup($event, group)">
+                                <div class="group-name">
+                                    <i class="glyphicon glyphicon-bookmark"></i><span ng-bind="group.GroupName"></span>
+                                </div>
+                            </dt>
+                        </dl>
+                    </dt>
+                </dl>
             </div>
         </div>
         <div class="overflow-h col-md-9">

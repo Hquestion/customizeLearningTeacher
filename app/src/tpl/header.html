@@ -22,7 +22,7 @@
                 </li>
                 <!-- END USER LOGIN DROPDOWN -->
                 <!-- BEGIN QUICK SIDEBAR TOGGLER -->
-                <li class="dropdown dropdown-extended quick-sidebar-toggler">
+                <li class="dropdown dropdown-extended quick-sidebar-toggler" title="退出登陆" ng-click="logout()">
                     <i class="icon-logout"></i>
                 </li>
                 <!-- END QUICK SIDEBAR TOGGLER -->
@@ -40,9 +40,6 @@
         <!-- DOC: Remove dropdown-menu-hover and data-close-others="true" attributes below to disable the dropdown opening on mouse hover -->
         <div class="hor-menu">
             <ul class="nav navbar-nav">
-                <li class="active">
-                    <a href="#/dashboard.html">Dashboard</a>
-                </li>
                 <li>
                     <a href="#/study-center.html">学习中心</a>
                 </li>
@@ -55,58 +52,7 @@
                 <li>
                     <a href="#/setting.html">系统设置</a>
                 </li>
-                <li class="menu-dropdown mega-menu-dropdown ">
-                    <a data-hover="megamenu-dropdown" data-close-others="true" data-toggle="dropdown" href="#" class="dropdown-toggle"> AngularJS
-                        <i class="fa fa-angle-down"></i>
-                    </a>
-                    <ul class="dropdown-menu" style="min-width: 410px">
-                        <li>
-                            <div class="mega-menu-content">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <ul class="mega-menu-submenu">
-                                            <li>
-                                                <h3>AngularJS Features</h3>
-                                            </li>
-                                            <li>
-                                                <a href="#/ui_bootstrap.html" class="iconify">
-                                                    <i class="icon-puzzle"></i> UI Bootstrap </a>
-                                            </li>
-                                            <li>
-                                                <a href="#/file_upload.html" class="iconify">
-                                                    <i class="icon-paper-clip"></i> File Upload </a>
-                                            </li>
-                                            <li>
-                                                <a href="#/ui_select.html" class="iconify">
-                                                    <i class="icon-check"></i> UI Select </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <ul class="mega-menu-submenu">
-                                            <li>
-                                                <h3>Sample Column</h3>
-                                            </li>
-                                            <li>
-                                                <a href="#" class="iconify">
-                                                    <i class="icon-cursor-move"></i> Sample Section 1 </a>
-                                            </li>
-                                            <li>
-                                                <a href="#" class="iconify">
-                                                    <i class="icon-pin"></i> Sample Section 1 </a>
-                                            </li>
-                                            <li>
-                                                <a href="#" class="iconify">
-                                                    <i class="icon-bar-chart"></i> Sample Section 1 </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </li>
-                <li class="menu-dropdown mega-menu-dropdown mega-menu-full ">
+                <li style="display: none;" class="menu-dropdown mega-menu-dropdown mega-menu-full ">
                     <a data-hover="megamenu-dropdown" data-close-others="true" data-toggle="dropdown" href="javascript:;" class="dropdown-toggle"> jQuery
                         <i class="fa fa-angle-down"></i>
                     </a>
@@ -240,65 +186,6 @@
                                     </div>
                                 </div>
                             </div>
-                        </li>
-                    </ul>
-                </li>
-                <li class="menu-dropdown classic-menu-dropdown ">
-                    <a data-hover="megamenu-dropdown" data-close-others="true" data-toggle="dropdown" href="javascript:;"> Pages
-                        <i class="fa fa-angle-down"></i>
-                    </a>
-                    <ul class="dropdown-menu pull-left">
-                        <li>
-                            <a href="#/profile/dashboard" id="sidebar_menu_link_profile">
-                                <i class="icon-user"></i> User Profile </a>
-                        </li>
-                        <li>
-                            <a href="#/todo">
-                                <i class="icon-check"></i> Task & Todo </a>
-                        </li>
-                        <li class=" dropdown-submenu">
-                            <a href="javascript:;">
-                                <i class="icon-puzzle"></i> Multi Level </a>
-                            <ul class="dropdown-menu">
-                                <li class=" ">
-                                    <a href="javascript:;">
-                                        <i class="icon-settings"></i> Item 1 </a>
-                                </li>
-                                <li class=" ">
-                                    <a href="javascript:;">
-                                        <i class="icon-user"></i> Item 2 </a>
-                                </li>
-                                <li class=" ">
-                                    <a href="javascript:;">
-                                        <i class="icon-globe"></i> Item 3 </a>
-                                </li>
-                                <li class=" dropdown-submenu">
-                                    <a href="#">
-                                        <i class="icon-folder"></i> Sub Items </a>
-                                    <ul class="dropdown-menu">
-                                        <li class=" ">
-                                            <a href="javascript:;"> Item 1 </a>
-                                        </li>
-                                        <li class=" ">
-                                            <a href="javascript:;"> Item 2 </a>
-                                        </li>
-                                        <li class=" ">
-                                            <a href="javascript:;"> Item 3 </a>
-                                        </li>
-                                        <li class=" ">
-                                            <a href="javascript:;"> Item 4 </a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class=" ">
-                                    <a href="javascript:;">
-                                        <i class="icon-share"></i> Item 4 </a>
-                                </li>
-                                <li class=" ">
-                                    <a href="javascript:;">
-                                        <i class="icon-bar-chart"></i> Item 5 </a>
-                                </li>
-                            </ul>
                         </li>
                     </ul>
                 </li>
