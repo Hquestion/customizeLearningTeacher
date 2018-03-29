@@ -1,27 +1,29 @@
 angular.module('MetronicApp', ['720kb.datepicker']).controller('CourseController', function($rootScope, $scope, $q, $modal, httpService, SweetAlert) {
+    var tempCourse = {
+        SchoolFID: $rootScope.userInfo.SchoolFID,
+        Creater: $rootScope.userInfo.FlnkID,
+        Modifier: $rootScope.userInfo.FlnkID,
+        "FlnkID": "",
+        "CourseName": "",
+        "CourseCode": "",
+        "CourseCategoryFID": "",
+        "HeadTeacherFID": "",
+        "CourseDuration": 1,
+        "IsExpireClose": false,
+        "IsWorkTeam": false,
+        "GroupNum": 1,
+        "IsNumControl": false,
+        "OpenStartTime": "",
+        "OpenEndTime": "",
+        "SortCode": 1,
+        "IsAudited": false,
+        "HeadTeacherName": "",
+        "CoordTeachers": ""
+    };
+
     $scope.data = {
         courseCateList: [],
-        currentCourse: {
-            SchoolFID: $scope.userInfo.SchoolFID,
-            Creater: $scope.userInfo.FlnkID,
-            Modifier: $scope.userInfo.FlnkID,
-            "FlnkID": "",
-            "CourseName": "",
-            "CourseCode": "",
-            "CourseCategoryFID": "",
-            "HeadTeacherFID": "",
-            "CourseDuration": 1,
-            "IsExpireClose": false,
-            "IsWorkTeam": false,
-            "GroupNum": 1,
-            "IsNumControl": false,
-            "OpenStartTime": "",
-            "OpenEndTime": "",
-            "SortCode": 1,
-            "IsAudited": false,
-            "HeadTeacherName": "",
-            "CoordTeachers": ""
-        }
+        currentCourse: {}
     };
 
     var TAB_INDEX_MAP = {
@@ -62,6 +64,7 @@ angular.module('MetronicApp', ['720kb.datepicker']).controller('CourseController
                 cate.courseList = res;
                 if(isInit) {
                     $scope.data.currentCourse = res[0];
+                    cate.isOpend = true;
                 }
             }, function(){
                 cate.courseList = [];
@@ -83,7 +86,7 @@ angular.module('MetronicApp', ['720kb.datepicker']).controller('CourseController
         });
         httpService.post('api/CourseInfo/SaveCourseInfo', {
             CourseInfo: $scope.data.currentCourse,
-            ListCoordinationTeacher: []
+            ListCoordinationTeacher: $scope.data.currentCourse.helpTeacherList
         }).then(function(res){
             if(!$scope.data.currentCourse.FlnkID) {
                 $scope.data.currentCourse.FlnkID = res.CourseFID;
@@ -111,26 +114,102 @@ angular.module('MetronicApp', ['720kb.datepicker']).controller('CourseController
 
     $scope.setCurrentCourse = function(e, course) {
         e.stopPropagation();
+        $scope.activateTab('1');
         $scope.data.currentCourse = course;
         $scope.data.arrangeList = null;
         $scope.data.courseRemarkList = null;
-        $scope.activateTab('1');
+        $scope.data.prevKnowContent = null;
+        if(!course.helpTeacherList) {
+            course.helpTeacherList = [];
+            httpService.get('api/CourseInfo/GetListCourseCoordinationTeacher', {
+                courseFID: course.FlnkID
+            }).then(function(res){
+                course.helpTeacherList = res;
+            }, function(){
+                course.helpTeacherList = [];
+            });
+        }
     };
 
     $scope.addCourse = function(){
-        $scope.data.currentCourse = null;
+        $scope.activateTab('1');
+        $scope.data.currentCourse = JSON.parse(JSON.stringify(tempCourse));
+        $scope.data.arrangeList = null;
+        $scope.data.courseRemarkList = null;
+        $scope.data.prevKnowContent = null;
+    };
+
+    $scope.deleteCourse = function(){
+        var defer = SweetAlert.confirm('确定删除本课程吗？删除之后将同时删除课程关联的小组任务');
+        defer.then(function(res) {
+            if(res.dismiss === 'cancel') {
+                return;
+            }
+            httpService.post('api/CourseInfo/DeleteCourseInfoByID', {
+                FLnkID: $scope.data.currentCourse.FlnkID
+            }).then(function (res) {
+                SweetAlert.success('删除课程成功！', {
+                    title: ''
+                });
+                var courseCate = _.find($scope.data.courseCateList, function (cate) {
+                    return cate.FlnkID === $scope.data.currentCourse.CourseCategoryFID;
+                });
+                var index = _.findIndex(courseCate.courseList, function (item) {
+                    return item.FlnkID === $scope.data.currentCourse.FlnkID;
+                });
+                courseCate.courseList.splice(index, 1);
+                $scope.addCourse();
+            }, function () {
+                SweetAlert.error('删除课程失败，请重试！', {
+                    title: ''
+                });
+            });
+        });
     };
 
     $scope.initEditor = function(){
         $scope.activateTab('2');
-        CKEDITOR.replace('prev-know-editor');
-    };
+        try {
+            CKEDITOR.replace('prev-know-editor');
+        }catch (e) {
 
-    $scope.initArrange = function(){
-        $scope.activateTab('3');
-        if($scope.data.arrangeList) {
+        }
+        if($scope.data.prevKnowContent) {
             return;
         }
+        httpService.get('api/CourseManage/GetSingleCourseKnows', {
+            courseFID: $scope.data.currentCourse.FlnkID
+        }).then(function(res){
+            $scope.data.prevKnowContent = res;
+            CKEDITOR.instances['prev-know-editor'].setData($scope.data.prevKnowContent.KnowContent);
+        }, function(){
+            $scope.data.prevKnowContent = {
+                "FlnkID": "",
+                "CourseFID": $scope.data.currentCourse.FlnkID,
+                "KnowContent": "",
+                "Creater": $rootScope.userInfo.FlnkID,
+                "Midifier": $rootScope.userInfo.FlnkID
+            };
+            CKEDITOR.instances['prev-know-editor'].setData('');
+        });
+    };
+
+    $scope.savePrevKnow = function(){
+        var instance = CKEDITOR.instances['prev-know-editor'];
+        var content = instance.getData();
+        $scope.data.prevKnowContent.KnowContent = content;
+        httpService.post('api/CourseManage/OpertionTempleTable', $scope.data.prevKnowContent).then(function(res){
+            SweetAlert.success('保存早知道内容成功！', {
+                title: ''
+            });
+        }, function(){
+            SweetAlert.error('保存早知道内容失败，请重试！', {
+                title: ''
+            });
+        });
+    };
+
+    function initArrangeDataAjax(){
         httpService.get('api/CourseManage/GetListC_CourseArrangeInfo', {
             courseFID: $scope.data.currentCourse.FlnkID
         }).then(function(res){
@@ -152,6 +231,44 @@ angular.module('MetronicApp', ['720kb.datepicker']).controller('CourseController
                 }
             });
             $scope.data.arrangeList = res;
+        });
+    }
+
+    $scope.initArrange = function(){
+        $scope.activateTab('3');
+        if($scope.data.arrangeList) {
+            return;
+        }
+        initArrangeDataAjax();
+    };
+
+    $scope.deleteStep = function(index){
+        var defer = SweetAlert.confirm('确定删除此步骤吗？删除之后您需要保存设置才能生效！');
+        defer.then(function(res) {
+            if(res.dismiss === 'cancel') {
+                return;
+            }
+            var data = $scope.data.arrangeList[index];
+            if(data.FlnkID) {
+                httpService.post('api/CourseManage/DeleteCourseArrangeInfo', {
+                    FlnkID: data.FlnkID
+                }).then(function(res){
+                    if(index >= 0) {
+                        $scope.data.arrangeList.splice(index, 1);
+                    }
+                    SweetAlert.success('删除会安排步骤成功！', {
+                        title: ''
+                    });
+                }, function(){
+                    SweetAlert.error('删除会安排步骤失败，请重试！', {
+                        title: ''
+                    });
+                });
+            }else {
+                if(index >= 0) {
+                    $scope.data.arrangeList.splice(index, 1);
+                }
+            }
         });
     };
 
@@ -210,6 +327,11 @@ angular.module('MetronicApp', ['720kb.datepicker']).controller('CourseController
             SweetAlert.success('保存步骤成功！', {
                 title: ''
             });
+            initArrangeDataAjax();
+        }, function(){
+            SweetAlert.error('保存步骤失败，请重试！', {
+                title: ''
+            });
         });
     };
 
@@ -262,17 +384,92 @@ angular.module('MetronicApp', ['720kb.datepicker']).controller('CourseController
     $scope.saveThink = function(){
         var param = [];
         _.each($scope.data.courseRemarkList, function(item, index){
+            _.each(item.modelList, function(modelItem, index2){
+                modelItem.SortCode = index2 + 1;
+            });
             param = param.concat(item.modelList);
         });
         httpService.post('api/CourseManage/SaveCourseReflectConfigItem', param).then(function(res){
             SweetAlert.success('保存有反思内容成功！', {
                 title: ''
             });
+            httpService.get('api/CourseManage/GetListCourseReflectConfigDetails', {
+                courseFID: $scope.data.currentCourse.FlnkID
+            }).then(function(res){
+                if(res && res instanceof Array) {
+                    _.each(res, function(item, index){
+                        item.modelList = item.modelList || [];
+                    });
+                    $scope.data.courseRemarkList = res;
+                }else {
+                    $scope.data.courseRemarkList = [];
+                }
+            });
         }, function(){
             SweetAlert.error('保存有反思内容失败，请重试！', {
                 title: ''
             });
         });
+    };
+
+    $scope.deleteThinkItem = function(index, remarkParent){
+        // 删除有反思内容
+        var defer = SweetAlert.confirm('确定删除此打分项吗？删除之后将无法恢复！');
+        defer.then(function(res) {
+            if (res.dismiss === 'cancel') {
+                return;
+            }
+            var data = remarkParent.modelList[index];
+            if(data && data.FlnkID) {
+                httpService.post('api/CourseManage/DeleteCourseReflectConfigItem', {
+                    FlnkID: data.FlnkID
+                }).then(function(res){
+                    SweetAlert.success('删除打分项成功！', {
+                        title: ''
+                    });
+                    if(index >= 0) {
+                        remarkParent.modelList.splice(index, 1);
+                    }
+                }, function(){
+                    SweetAlert.error('删除打分项失败，请重试！', {
+                        title: ''
+                    });
+                });
+            }else {
+                if(index >= 0) {
+                    remarkParent.modelList.splice(index, 1);
+                }
+            }
+        });
+    };
+
+    $scope.moveThinkItem = function (data, index) {
+        if(index > 0) {
+            var list = data.modelList;
+            var tempData = list[index];
+            data.modelList.splice(index, 1);
+            data.modelList.splice(index - 1, 0, tempData);
+        }
+    };
+
+    $scope.sortStep = function(data, index){
+        if(index > 0) {
+            var tempData = data[index];
+            data.splice(index, 1);
+            data.splice(index - 1, 0, tempData);
+        }
+    };
+
+    $scope.editHelpTeacher = function(){
+        $scope.editHelpTeacherDialog = $modal.open({
+            templateUrl: 'selectTeacher',
+            scope: $scope,
+            controller: 'editHelpTeacherCtrl'
+        });
+    };
+
+    $scope.deleteHelpTeacher = function(data, index){
+        $scope.data.currentCourse.helpTeacherList.splice(index, 1);
     };
 });
 
@@ -319,4 +516,63 @@ angular.module('MetronicApp').controller('editArrangeCtrl', function($rootScope,
     $scope.cancel = function(){
         $scope.editArrangeStepDialog && $scope.editArrangeStepDialog.close()
     };
+
+    $scope.deleteOptionItem = function(index){
+        var data = $scope.toEditArrange.modelList[index];
+        if(data && data.FlnkID) {
+            httpService.post('api/CourseManage/DeleteCourseArrangeSeletct', {
+                FlnkID: data.FlnkID
+            }).then(function(res){
+                $scope.toEditArrange.modelList.splice(index, 1);
+            }, function(){
+                SweetAlert.error('删除失败,请重试！');
+            });
+        } else {
+            $scope.toEditArrange.modelList.splice(index, 1);
+        }
+    }
+});
+
+angular.module('MetronicApp').controller('editHelpTeacherCtrl', function($rootScope, $scope, httpService){
+    $scope.originTeacherList = _.filter($scope.teacherList, function (item) {
+        return true;
+    });
+    _.each($scope.data.currentCourse.helpTeacherList, function(helpItem){
+        var helpTeacher = _.find($scope.originTeacherList, function(item){
+            return item.FlnkID === helpItem.TeacherFID;
+        });
+        if(helpTeacher) {
+            helpTeacher.isSelected = true;
+        }
+    });
+    $scope.filtTeacherList = _.filter($scope.originTeacherList, function(){return true});
+    $scope.searchKey = '';
+    $scope.onInputSearch = function(){
+        $scope.filtTeacherList = _.filter($scope.originTeacherList, function(item){
+            return item.XM.indexOf($scope.searchKey) >= 0;
+        });
+    };
+    $scope.addHelpTeacher = function(){
+        var selectedTeachers = $scope.filtTeacherList.filter(function(item){
+            return !!item.isSelected;
+        });
+        var newHelpTeachers = _.map(selectedTeachers, function(item){
+            var old = _.find($scope.data.currentCourse.helpTeacherList, function(teacher){
+                return teacher.TeacherFID === item.FlnkID;
+            });
+            return {
+                CourseFID: $scope.data.currentCourse.FlnkID,
+                Creater: $rootScope.userInfo.FlnkID,
+                FlnkID: old && old.FlnkID || '',
+                Modifier: $rootScope.userInfo.FlnkID,
+                TeacherFID: item.FlnkID,
+                TeacherName: item.XM
+            };
+        });
+        $scope.data.currentCourse.helpTeacherList = newHelpTeachers;
+        $scope.editHelpTeacherDialog && $scope.editHelpTeacherDialog.close();
+    };
+    $scope.cancel = function(){
+        $scope.editHelpTeacherDialog && $scope.editHelpTeacherDialog.close();
+    }
 });

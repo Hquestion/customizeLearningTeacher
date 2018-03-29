@@ -117,16 +117,12 @@
     function swal_confirm(message, options) {
       var defered = $q.defer();
       var options = angular.extend({
-        title: "Alert",
+        title: "",
         text: message,
         type: "warning",
         showCancelButton: true
       }, options);
-      swal(options, function(r) {
-        defered.resolve(r);
-      }, function(e) {
-        defered.reject(e);
-      });
+      swal(options).then(defered.resolve, defered.reject);
       return defered.promise;
     }
     return {
