@@ -63,7 +63,7 @@ angular.module('MetronicApp', ['720kb.datepicker']).controller('CourseController
                 });
                 cate.courseList = res;
                 if(isInit) {
-                    $scope.data.currentCourse = res[0];
+                    $scope.setCurrentCourse(null, res[0]);
                     cate.isOpend = true;
                 }
             }, function(){
@@ -113,7 +113,7 @@ angular.module('MetronicApp', ['720kb.datepicker']).controller('CourseController
     };
 
     $scope.setCurrentCourse = function(e, course) {
-        e.stopPropagation();
+        e && e.stopPropagation();
         $scope.activateTab('1');
         $scope.data.currentCourse = course;
         $scope.data.arrangeList = null;
@@ -469,7 +469,17 @@ angular.module('MetronicApp', ['720kb.datepicker']).controller('CourseController
     };
 
     $scope.deleteHelpTeacher = function(data, index){
-        $scope.data.currentCourse.helpTeacherList.splice(index, 1);
+        if(data.FlnkID) {
+            httpService.post('api/CourseInfo/DeleteCourseCoordinationTeacher', {
+                FLnkID: data.FlnkID
+            }).then(function(res){
+                $scope.data.currentCourse.helpTeacherList.splice(index, 1);
+            }, function(){
+                SweetAlert.error('删除协作老师失败！');
+            });
+        }else {
+            $scope.data.currentCourse.helpTeacherList.splice(index, 1);
+        }
     };
 });
 

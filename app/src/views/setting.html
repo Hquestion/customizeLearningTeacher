@@ -6,17 +6,16 @@
                 <div>
                     <div class="form-group" ng-repeat="courseCate in courseCateList track by $index">
                         <div class="row">
-                            <div class="col-md-4">
-                                <input type="text" ng-model="courseCate.CourseCategoryName">
+                            <div class="col-md-5">
+                                <input class="input-md form-control"  type="text" ng-model="courseCate.CourseCategoryName" ng-blur="updateCourseCate()">
                             </div>
                             <div class="col-md-4">
-                                <select ng-options="teacher.FlnkID as teacher.XM for teacher in teacherList" ng-model="courseCate.HeadTeacher"></select>
+                                <select class="input-md form-control" ng-options="teacher.FlnkID as teacher.XM for teacher in teacherList"
+                                        ng-model="courseCate.HeadTeacher" ng-change="updateCourseCate()"></select>
                             </div>
-                            <div class="col-md-2">
-                                <span class="glyphicon glyphicon-trash"></span>
-                            </div>
-                            <div class="col-md-2">
-                                <i class="glyphicon glyphicon-arrow-up"></i>
+                            <div class="col-md-3">
+                                <a class="glyphicon glyphicon-trash" ng-click="deleteCourseCate(courseCate, $index)"></a>
+                                <a class="glyphicon glyphicon-arrow-up" ng-if="$index > 0" ng-click="moveCourseCate(courseCate, $index)"></a>
                             </div>
                         </div>
                     </div>
@@ -30,14 +29,12 @@
                 <div>
                     <div class="form-group" ng-repeat="arrangeTpl in arrangeTplList track by $index">
                         <div class="row">
-                            <div class="col-md-8">
-                                <input type="text" ng-model="arrangeTpl.SetItemName">
+                            <div class="col-md-9">
+                                <input class="input-md form-control" type="text" ng-model="arrangeTpl.SetItemName" ng-blur="updateArrange()">
                             </div>
-                            <div class="col-md-2">
-                                <span class="glyphicon glyphicon-trash"></span>
-                            </div>
-                            <div class="col-md-2">
-                                <i class="glyphicon glyphicon-arrow-up"></i>
+                            <div class="col-md-3">
+                                <a class="glyphicon glyphicon-trash" ng-click="deleteArrange(arrangeTpl, $index)"></a>
+                                <a class="glyphicon glyphicon-arrow-up" ng-if="$index > 0" ng-click="moveArrange(arrangeTpl, $index)"></a>
                             </div>
                         </div>
                     </div>
@@ -51,14 +48,12 @@
                 <div>
                     <div class="form-group" ng-repeat="thinkTpl in thinkTplList track by $index">
                         <div class="row">
-                            <div class="col-md-8">
-                                <input type="text" ng-model="thinkTpl.SetItemName">
+                            <div class="col-md-9">
+                                <input class="input-md form-control" type="text" ng-model="thinkTpl.SetItemName" ng-blur="updateThink()">
                             </div>
-                            <div class="col-md-2">
-                                <span class="glyphicon glyphicon-trash"></span>
-                            </div>
-                            <div class="col-md-2">
-                                <i class="glyphicon glyphicon-arrow-up"></i>
+                            <div class="col-md-3">
+                                <a class="glyphicon glyphicon-trash" ng-click="deleteThink(thinkTpl, $index)"></a>
+                                <a class="glyphicon glyphicon-arrow-up" ng-if="$index > 0" ng-click="moveThink(thinkTpl, $index)"></a>
                             </div>
                         </div>
                     </div>
@@ -78,3 +73,66 @@
         </div>
     </div>
 </div>
+<script type="text/ng-template" id="courseCateSetting">
+    <div class="portlet light">
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="col-md-12">
+                    <h5>课程类别名称</h5>
+                </div>
+                <div class="col-md-12">
+                    <input type="text" placeholder="请输入课程类别名称" class="input-md form-control" ng-model="tempCourseCateName">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-12">
+                    <h5>课程类别负责老师</h5>
+                </div>
+                <div class="col-md-12">
+                    <select class="input-md form-control" ng-options="teacher.FlnkID as teacher.XM for teacher in teacherList"
+                            ng-model="tempCourseCateHeadTeacher"></select>
+                </div>
+            </div>
+            <div class="form-actions">
+                <div class="btn btn-success" ng-click="doAddCourseCate()">保存</div>
+                <div class="btn btn-default" ng-click="cancel()">取消</div>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="arrangeTplSetting">
+    <div class="portlet light">
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="col-md-12">
+                    <h5>会安排模板名称</h5>
+                </div>
+                <div class="col-md-12">
+                    <input type="text" class="input-md form-control" placeholder="请输入会安排模板名称"  ng-model="tempArrangeName">
+                </div>
+            </div>
+            <div class="form-actions">
+                <div class="btn btn-success" ng-click="doAddArrange()">保存</div>
+                <div class="btn btn-default" ng-click="cancel()">取消</div>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="thinkTplSetting">
+    <div class="portlet light">
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="col-md-12">
+                    <h5>有反思模板名称</h5>
+                </div>
+                <div class="col-md-12">
+                    <input type="text" class="input-md form-control" placeholder="请输入有反思模板名称" ng-model="tempThinkName">
+                </div>
+            </div>
+            <div class="form-actions">
+                <div class="btn btn-success" ng-click="doAddThink()">保存</div>
+                <div class="btn btn-default" ng-click="cancel()">取消</div>
+            </div>
+        </div>
+    </div>
+</script>
