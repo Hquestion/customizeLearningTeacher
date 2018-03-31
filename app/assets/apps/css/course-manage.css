@@ -4,7 +4,7 @@
     overflow: auto;
 }
 
-@media(max-device-width: 991px)  {
+@media(max-width: 991px)  {
     .course-manage .course-tree {
         width: 100%;
     }

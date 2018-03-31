@@ -54,9 +54,18 @@ angular.module('MetronicApp', ['720kb.datepicker']).controller('CourseController
         if(cate.courseList) {
             return;
         }else {
-            httpService.get('api/CourseInfo/GetCourseInfoByCategoryID', {
-                CourseCategoryFID: cate.FlnkID
-            }).then(function(res){
+            var defer;
+            if(+$rootScope.userInfo.RoleNum === 1) {
+                defer = httpService.get('api/CourseInfo/GetCourseInfoByCategoryID', {
+                    CourseCategoryFID: cate.FlnkID
+                })
+            } else {
+                defer = httpService.get('api/CourseInfo/GetCourseInfoByTeacherCategoryID', {
+                    CourseCategoryFID: cate.FlnkID,
+                    teacherFID: $rootScope.userInfo.FlnkID
+                });
+            }
+            defer.then(function(res){
                 _.each(res, function(item){
                     item.OpenEndTime = item.OpenEndTime && item.OpenEndTime.slice(0, 10) || '';
                     item.OpenStartTime = item.OpenStartTime && item.OpenStartTime.slice(0, 10) || '';

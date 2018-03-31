@@ -97,3 +97,33 @@ MetronicApp.directive('star', function () {
         }]
     }
 });
+
+MetronicApp.directive('scrollUp', function () {
+    return {
+        scope: {
+            scrollUp: '&',
+            upperVal: '='
+        },
+        link: function (scope, elem) {
+            var lastOffsetTop = 0;
+            var upperVal = scope.upperVal || 100;
+            $(elem).on('scroll', (function(){
+                var lastTime = +new Date();
+                return function(e){
+                    var now = +new Date();
+                    if(now - lastTime > 200) {
+                        lastTime = now;
+                        var currentScrollTop = $(elem).scrollTop();
+                        if(currentScrollTop < lastOffsetTop) {
+                            //向上滚动
+                            if(currentScrollTop < upperVal) {
+                                scope.scrollUp();
+                            }
+                        }
+                    }
+                    lastOffsetTop = $(this).scrollTop();
+                }
+            })())
+        }
+    };
+});

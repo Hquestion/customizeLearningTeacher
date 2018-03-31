@@ -1,0 +1,44 @@
+@media(max-width: 991px)  {
+    .study-center .course-tree {
+        width: 100%;
+    }
+}
+.study-center .course-tree dl dt {
+    font-weight: normal;
+}
+.study-center .course-tree dl dt .course-name span, .course-manage .course-tree dl dt .group-name span{
+    margin-left: 10px;
+}
+.study-center .course-tree dl dt .course-name {
+    padding: 15px;
+    cursor: pointer;
+}
+.study-center .course-tree dl dt .list-group {
+    padding-left: 25px;
+    background: #fefefe;
+    margin-bottom: 0;
+    display: none;
+}
+.study-center .course-tree dl dt.course-item.opend .list-group{
+    display: block;
+}
+.study-center .course-tree dl dt .list-group .group-name {
+    padding: 10px;
+    cursor: pointer;
+}
+.study-center .course-tree dl dt .list-group .group-item.active .group-name{
+    color: #0b94ea;
+}
+.study-center .course-tree .course-item.active .course-name {
+    color: #0b94ea;
+    background: #f2f2f2;
+    border-left: 4px solid #0b94ea;
+}
+ul, li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.study-center .arrange-list li.checked {
+    color: #0b94ea;
+}

@@ -1,6 +1,6 @@
 <div class="study-center">
     <div class="row">
-        <div class="pull-left col-md-3">
+        <div class="pull-left col-md-3 course-tree">
             <div class="portlet light bordered">
                 <dl>
                     <dt class="course-item" ng-repeat="course in data.courseList track by $index"
@@ -24,31 +24,152 @@
                 </dl>
             </div>
         </div>
-        <div class="overflow-h col-md-9">
+        <div class="overflow-h col-md-9" ng-show="!!data.currentGroup">
             <div class="row">
                 <div class="col-md-4">
-                    <div class="portlet light bordered">
-                        <p>会安排处理</p>
-                        <p>会安排处理</p>
-                        <p>会安排处理</p>
-                        <p>会安排处理</p>
+                    <div class="portlet light bordered" style="height: 450px;overflow: auto">
+                        <h4>会安排</h4>
+                        <div class="form-group" ng-repeat="arrange in data.groupArrangeList track by $index">
+                            <div class="form-group">
+                                <div class="row">
+                                    <h5 class="col-md-12">
+                                        <span>步骤{{$index + 1}}、</span>
+                                        <span class="arrange-name" ng-bind="arrange.ArrangeName"></span>
+                                    </h5>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="well" style="background: #efefef;margin-bottom: 0;">
+                                    <div ng-if="arrange.modelList && arrange.modelList[0]">
+                                        <ul class="arrange-list" ng-show="arrange.modelList && arrange.modelList[0].ArrangeType === 1">
+                                            <li ng-repeat="arrangeModel in arrange.modelList track by $index" ng-class="{'checked': arrangeModel.IsCheck}">
+                                                <span>选项{{$index + 1}}：</span><span ng-bind="arrangeModel.ArrangeContent"></span>
+                                            </li>
+                                        </ul>
+                                        <div ng-show="arrange.modelList && arrange.modelList[0].ArrangeType === 0">
+                                            <div ng-if="arrange.modelList[0].FlnkID || arrange.modelList[0].ArrangeContent" ng-bind="arrange.modelList[0].ArrangeContent"></div>
+                                            <div ng-if="!arrange.modelList[0].FlnkID && !arrange.modelList[0].ArrangeContent">
+                                                暂无内容
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-8">
-                    <div class="portlet light bordered">
-                        <p>课程详情</p>
-                        <p>课程详情</p>
-                        <p>课程详情</p>
-                        <p>课程详情</p>
+                    <div class="portlet light bordered" style="height: 450px;overflow: auto">
+                        <div class="portlet-title">
+                            <h4 class="pull-left">能落实</h4>
+                            <div class="btn btn-success btn-circle pull-right">查看成果</div>
+                        </div>
+                        <div class="portlet-body">
+                            <div class="row">
+                                <div class="col-md-2">小组成员</div>
+                                <div class="col-md-10 overflow-h">
+                                    <div class="carousel-container" style="width: 9999px">
+                                        <ul class="nav nav-pills">
+                                            <li role="presentation" ng-class="{active: !data.currentGroupMember}"ng-click="setCurrentMember('')"><a href="#">全部</a></li>
+                                            <li role="presentation" ng-repeat="member in data.groupMembers track by $index"
+                                                ng-class="{'active': data.currentGroupMember.MemberFID === member.MemberFID}"
+                                                ng-click="setCurrentMember(member)">
+                                                <a ng-bind="member.MemberName">Profile</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="msg-block">
+                                <div class="row">
+                                    <div class="col-md-2">姓名</div>
+                                    <div class="col-md-6">内容</div>
+                                    <div class="col-md-4">时间</div>
+                                </div>
+                                <div class="msg-content" style="overflow-y: auto;overflow-x:hidden"
+                                     ng-style="{height: data.currentGroup.Status === 0 ? '220px': '270px'}"
+                                     scroll-up="onMsgContentScroll()">
+                                    <div class="form-group" ng-repeat="msg in data.messages track by $index">
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <div style="padding: 8px 0;">
+                                                {{msg.UserName}}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="well-sm">
+                                                    <div ng-if="msg.MessageBody.msgtype=== '1'">
+                                                        {{msg.MessageBody.msgcontent}}
+                                                    </div>
+                                                    <div ng-if="msg.MessageBody.msgtype=== '2'">
+                                                        <img ng-src="{{msg.MessageBody.msgcontent}}">
+                                                    </div>
+                                                    <div ng-if="msg.MessageBody.msgtype=== '3'">
+                                                        <video ng-src="{{trustSrc(msg.MessageBody.msgcontent)}}"></video>
+                                                    </div>
+                                                    <div ng-if="msg.MessageBody.msgtype=== '4'">
+                                                        <audio ng-src="{{trustSrc(msg.MessageBody.msgcontent)}}"></audio>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="well-sm">{{msg.MessageTime.slice(0, 10)}}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="margin-top: 15px;" ng-show="data.currentGroup.Status === 0">
+                                    <div class="row">
+                                        <div class="col-md-4" style="font-size: 26px;">
+                                            <a class="glyphicon glyphicon-thumbs-up" ng-click="sendFastMsg(1)"></a>
+                                            <a class="glyphicon glyphicon-camera" ng-click="sendFastMsg(2)"></a>
+                                            <a class="glyphicon glyphicon-book" ng-click="sendFastMsg(3)"></a>
+                                            <a class="glyphicon glyphicon-time" ng-click="sendFastMsg(4)"></a>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" ng-model="tempMsg">
+                                                <span class="input-group-addon btn btn-success" ng-click="sendMsg()">发送</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12">
                     <div class="portlet light bordered">
-                        有反思详情
+                        <div class="portlet-title">
+                            <h4 class="pull-left">有反思</h4>
+                            <div class="pull-right" style="font-size: 30px">
+                                <a class="glyphicon glyphicon-ok text-success" title="完成课程"></a>
+                                <a class="glyphicon glyphicon-remove text-danger" title="关闭课程"></a>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div class="overflow-h">
+                                <div class="carousel-container" style="width: 9999px">
+                                    <ul class="nav nav-pills">
+                                        <li role="presentation" ng-class="{active: !data.currentGroupMember}"ng-click="setThinkCurrentMember('')"><a href="#">小组</a></li>
+                                        <li role="presentation" ng-repeat="member in data.groupMembers track by $index"
+                                            ng-class="{'active': data.currentGroupMember.MemberFID === member.MemberFID}"
+                                            ng-click="setThinkCurrentMember(member)">
+                                            <a ng-bind="member.MemberName"></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </div>
+        </div>
+        <div class="overflow-h col-md-9" ng-show="!data.currentGroup">
+            <div class="portlet light bordered" style="height: 400px;text-align: center;padding-top: 70px;">
+                <h4 class="red">请选择一个小组！</h4>
             </div>
         </div>
     </div>
