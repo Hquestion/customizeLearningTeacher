@@ -188,8 +188,15 @@ Login page
   .login .logo {
     margin-top: 10px; }
   .login .content {
-    width: 280px;
-    margin-top: 10px; }
+    /*width: 280px;*/
+    /*margin-top: 10px;*/
+    width: 100%;
+    margin-top: 0;
+    /* margin-bottom: 0; */
+    height: 100vh;
+    overflow: auto;
+    border-radius: 0;
+  }
   .login .content h3 {
     font-size: 22px; }
   .forget-password {

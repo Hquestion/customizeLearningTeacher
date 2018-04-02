@@ -4,7 +4,9 @@
   "description": "Metronic by Keenthemes",
   "main": "gulpfile.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server:dev": "http-server -p 3009 -P http://192.168.0.117:89",
+    "server:product": "http-server -p 3009 -P http://xcx.lyclass.com"
   },
   "author": "",
   "license": "ISC",
