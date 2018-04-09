@@ -550,4 +550,9 @@ MetronicApp.run(["$rootScope", "settings", "$state", "$cookieStore", "$cookies",
     } else {
         $rootScope.userInfo = JSON.parse(localStorage.getItem('userInfo'));
     }
+    $rootScope.logout = function(){
+        window.location.href = 'login.html';
+        $cookieStore.remove('userId');
+        localStorage.removeItem('userInfo');
+    };
 }]);

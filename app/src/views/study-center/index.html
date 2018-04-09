@@ -7,7 +7,7 @@
                         ng-class="{'active': data.currentGroup.CourseFID === course.FlnkID, 'opend': !!course.isOpend}"
                         ng-click="toggleCourse(course)">
                         <div class="course-name">
-                            <i class="glyphicon" ng-class="!!course.isOpend ? 'glyphicon-folder-open': 'glyphicon-folder-close'"></i>
+                            <i class="glyphicon glyphicon-bookmark"></i>
                             <span ng-bind="course.CourseName"></span>
                             <i class="glyphicon pull-right" ng-class="!!course.isOpend ? 'glyphicon-menu-down': 'glyphicon-menu-left'"></i>
                         </div>
@@ -16,7 +16,7 @@
                                 ng-class="data.currentGroup.FlnkID === group.FlnkID ? 'active': ''"
                                 ng-click="setCurrentGroup($event, group)">
                                 <div class="group-name">
-                                    <i class="glyphicon glyphicon-bookmark"></i><span ng-bind="group.GroupName"></span>
+                                    <i class="glyphicon glyphicon-user"></i><span ng-bind="group.GroupName"></span>
                                 </div>
                             </dt>
                         </dl>
@@ -27,29 +27,33 @@
         <div class="overflow-h col-md-9" ng-show="!!data.currentGroup">
             <div class="row">
                 <div class="col-md-4">
-                    <div class="portlet light bordered" style="height: 450px;overflow: auto">
-                        <h4>会安排</h4>
-                        <div class="form-group" ng-repeat="arrange in data.groupArrangeList track by $index">
-                            <div class="form-group">
-                                <div class="row">
-                                    <h5 class="col-md-12">
-                                        <span>步骤{{$index + 1}}、</span>
-                                        <span class="arrange-name" ng-bind="arrange.ArrangeName"></span>
-                                    </h5>
+                    <div class="portlet light bordered" style="height: 600px;">
+                        <div class="portlet-title">
+                            <h4>会安排</h4>
+                        </div>
+                        <div class="portlet-body" style="overflow-y: auto;overflow-x: hidden;height: 507px">
+                            <div class="form-group" ng-repeat="arrange in data.groupArrangeList track by $index">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <h5 class="col-md-12">
+                                            <span>步骤{{$index + 1}}、</span>
+                                            <span class="arrange-name" ng-bind="arrange.ArrangeName"></span>
+                                        </h5>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="well" style="background: #efefef;margin-bottom: 0;">
-                                    <div ng-if="arrange.modelList && arrange.modelList[0]">
-                                        <ul class="arrange-list" ng-show="arrange.modelList && arrange.modelList[0].ArrangeType === 1">
-                                            <li ng-repeat="arrangeModel in arrange.modelList track by $index" ng-class="{'checked': arrangeModel.IsCheck}">
-                                                <span>选项{{$index + 1}}：</span><span ng-bind="arrangeModel.ArrangeContent"></span>
-                                            </li>
-                                        </ul>
-                                        <div ng-show="arrange.modelList && arrange.modelList[0].ArrangeType === 0">
-                                            <div ng-if="arrange.modelList[0].FlnkID || arrange.modelList[0].ArrangeContent" ng-bind="arrange.modelList[0].ArrangeContent"></div>
-                                            <div ng-if="!arrange.modelList[0].FlnkID && !arrange.modelList[0].ArrangeContent">
-                                                暂无内容
+                                <div class="form-group">
+                                    <div class="well" style="background: #efefef;margin-bottom: 0;">
+                                        <div ng-if="arrange.modelList && arrange.modelList[0]">
+                                            <ul class="arrange-list" ng-show="arrange.modelList && arrange.modelList[0].ArrangeType === 1">
+                                                <li ng-repeat="arrangeModel in arrange.modelList track by $index" ng-class="{'checked': arrangeModel.IsCheck}">
+                                                    <span>选项{{$index + 1}}：</span><span ng-bind="arrangeModel.ArrangeContent"></span>
+                                                </li>
+                                            </ul>
+                                            <div ng-show="arrange.modelList && arrange.modelList[0].ArrangeType === 0">
+                                                <div ng-if="arrange.modelList[0].FlnkID || arrange.modelList[0].ArrangeContent" ng-bind="arrange.modelList[0].ArrangeContent"></div>
+                                                <div ng-if="!arrange.modelList[0].FlnkID && !arrange.modelList[0].ArrangeContent">
+                                                    暂无内容
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -59,35 +63,35 @@
                     </div>
                 </div>
                 <div class="col-md-8">
-                    <div class="portlet light bordered" style="height: 450px;overflow: auto">
+                    <div class="portlet light bordered" style="height: 600px;overflow: auto">
                         <div class="portlet-title">
                             <h4 class="pull-left">能落实</h4>
-                            <div class="btn btn-success btn-circle pull-right">查看成果</div>
+                            <div class="btn btn-success btn-circle pull-right" ng-click="showPracticeResult()">查看成果</div>
                         </div>
                         <div class="portlet-body">
                             <div class="row">
-                                <div class="col-md-2">小组成员</div>
-                                <div class="col-md-10 overflow-h">
-                                    <div class="carousel-container" style="width: 9999px">
+                                <div class="col-md-2" style="padding:10px 0;">小组成员</div>
+                                <div class="col-md-10 overflow-h" bg-carousel  list="data.groupMembers">
+                                    <div class="carousel-container" style="position: relative;">
                                         <ul class="nav nav-pills">
                                             <li role="presentation" ng-class="{active: !data.currentGroupMember}"ng-click="setCurrentMember('')"><a href="#">全部</a></li>
                                             <li role="presentation" ng-repeat="member in data.groupMembers track by $index"
                                                 ng-class="{'active': data.currentGroupMember.MemberFID === member.MemberFID}"
                                                 ng-click="setCurrentMember(member)">
-                                                <a ng-bind="member.MemberName">Profile</a>
+                                                <a ng-bind="member.MemberName"></a>
                                             </li>
                                         </ul>
                                     </div>
                                 </div>
                             </div>
                             <div class="msg-block">
-                                <div class="row">
+                                <div class="row btn-success" style="padding: 10px 0;color: #fff;">
                                     <div class="col-md-2">姓名</div>
                                     <div class="col-md-6">内容</div>
                                     <div class="col-md-4">时间</div>
                                 </div>
                                 <div class="msg-content" style="overflow-y: auto;overflow-x:hidden"
-                                     ng-style="{height: data.currentGroup.Status === 0 ? '220px': '270px'}"
+                                     ng-style="{height: data.currentGroup.Status === 0 ? '350px': '400px'}"
                                      scroll-up="onMsgContentScroll()">
                                     <div class="form-group" ng-repeat="msg in data.messages track by $index">
                                         <div class="row">
@@ -102,18 +106,18 @@
                                                         {{msg.MessageBody.msgcontent}}
                                                     </div>
                                                     <div ng-if="msg.MessageBody.msgtype=== '2'">
-                                                        <img ng-src="{{msg.MessageBody.msgcontent}}">
+                                                        <img ng-src="{{msg.MessageBody.msgcontent}}" style="max-width: 100%;">
                                                     </div>
                                                     <div ng-if="msg.MessageBody.msgtype=== '3'">
-                                                        <video ng-src="{{trustSrc(msg.MessageBody.msgcontent)}}"></video>
+                                                        <video ng-src="{{trustSrc(msg.MessageBody.msgcontent)}}" style="max-width: 100%;" controls></video>
                                                     </div>
                                                     <div ng-if="msg.MessageBody.msgtype=== '4'">
-                                                        <audio ng-src="{{trustSrc(msg.MessageBody.msgcontent)}}"></audio>
+                                                        <audio ng-src="{{trustSrc(msg.MessageBody.msgcontent)}}"  style="max-width: 100%;" controls></audio>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
-                                                <div class="well-sm">{{msg.MessageTime.slice(0, 10)}}</div>
+                                                <div class="well-sm">{{msg.MessageTime.slice(0, 16).replace('T', '')}}</div>
                                             </div>
                                         </div>
                                     </div>
@@ -145,21 +149,50 @@
                         <div class="portlet-title">
                             <h4 class="pull-left">有反思</h4>
                             <div class="pull-right" style="font-size: 30px">
-                                <a class="glyphicon glyphicon-ok text-success" title="完成课程"></a>
-                                <a class="glyphicon glyphicon-remove text-danger" title="关闭课程"></a>
+                                <a class="glyphicon glyphicon-ok text-success" title="完成课程" ng-click="finishCourse()" ng-show="data.groupCanPraise"></a>
+                                <a class="glyphicon glyphicon-remove text-danger" title="关闭课程任务小组" ng-click="closeGroup()"></a>
                             </div>
                         </div>
                         <div class="portlet-body">
-                            <div class="overflow-h">
-                                <div class="carousel-container" style="width: 9999px">
+                            <div class="overflow-h" bg-carousel list="data.groupMembers" style="position: relative;padding: 0 15px;">
+                                <div class="carousel-container">
                                     <ul class="nav nav-pills">
-                                        <li role="presentation" ng-class="{active: !data.currentGroupMember}"ng-click="setThinkCurrentMember('')"><a href="#">小组</a></li>
+                                        <li role="presentation" ng-class="{active: !data.thinkCurrentMember}" ng-click="setThinkCurrentMember('')"><a href="#">小组</a></li>
                                         <li role="presentation" ng-repeat="member in data.groupMembers track by $index"
-                                            ng-class="{'active': data.currentGroupMember.MemberFID === member.MemberFID}"
+                                            ng-class="{'active': data.thinkCurrentMember.MemberFID === member.MemberFID}"
                                             ng-click="setThinkCurrentMember(member)">
                                             <a ng-bind="member.MemberName"></a>
                                         </li>
                                     </ul>
+                                </div>
+                            </div>
+                            <div class="portlet light" ng-show="!!data.thinkCurrentMember">
+                                <div class="portlet-title">
+                                    <h4>我的反思</h4>
+                                </div>
+                                <div class="portlet-body">
+                                    <div ng-bind="data.currentMemberThinkContent" ng-if="data.currentMemberThinkContent"></div>
+                                    <div class="text-stat" style="color: #999;" ng-if="!data.currentMemberThinkContent">
+                                        学生暂未填写反思内容
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="portlet light" ng-repeat="think in data.thinkTplList track by $index">
+                                <div class="portlet-title">
+                                    <h4>{{think.ReflectName}}</h4>
+                                </div>
+                                <div class="portlet-body">
+                                    <div class="form-group" ng-repeat="thinkItem in think.modelList track by $index">
+                                        <div class="row">
+                                            <div class="col-md-3" style="height: 40px;line-height: 40px;">
+                                                <div>{{thinkItem.ReflectItemName}}</div>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <!--<star max="data.EvaluateStar" current="thinkItem.StarValue" disable="data.groupCanPraise" disable-tip="暂时无法打分，还有部分学生没有提交反思结果"></star>-->
+                                                <star max="data.EvaluateStar" current="thinkItem.StarValue" disable="!data.groupCanPraise" disable-tip="暂时无法打分，还有部分学生没有提交反思结果"></star>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -174,3 +207,37 @@
         </div>
     </div>
 </div>
+<script type="text/ng-template" id="practiceResult">
+    <div class="practice-result portlet light">
+        <div class="form-group" ng-repeat="resultItem in currentStuResult track by $index">
+            <h4>
+                步骤{{resultItem.ArrangeSortCode}}、{{resultItem.ArrangeName}}
+            </h4>
+            <div class="well-sm" ng-repeat="arrangeSub in resultItem.WorkArrangeList track by $index">
+                <div ng-if="arrangeSub.MessageBody.msgtype=== '1'">
+                    {{arrangeSub.MessageBody.msgcontent}}
+                </div>
+                <div ng-if="arrangeSub.MessageBody.msgtype=== '2'">
+                    <img ng-src="{{arrangeSub.MessageBody.msgcontent}}" style="max-width: 100%;">
+                </div>
+                <div ng-if="arrangeSub.MessageBody.msgtype=== '3'">
+                    <video ng-src="{{trustSrc(arrangeSub.MessageBody.msgcontent)}}" controls></video>
+                </div>
+                <div ng-if="arrangeSub.MessageBody.msgtype=== '4'">
+                    <audio ng-src="{{trustSrc(arrangeSub.MessageBody.msgcontent)}}" controls></audio>
+                </div>
+            </div>
+        </div>
+        <div style="color: #999;height: 120px;text-align: center;padding-top: 50px;" ng-show="currentStuResult.length === 0">
+            学生尚未提交步骤落实结果
+        </div>
+        <div class="form-group" ng-if="modalStuThinkContent">
+            <div class="well">
+                {{modalStuThinkContent}}
+            </div>
+        </div>
+        <div class="text-center">
+            <div class="btn btn-success btn-circle btn-lg" style="width: 150px;" ng-click="close()">关闭</div>
+        </div>
+    </div>
+</script>

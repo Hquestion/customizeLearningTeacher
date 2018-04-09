@@ -1,4 +1,4 @@
-angular.module('MetronicApp').controller('StudyCenterController', function($rootScope, $scope, $http, $timeout,$sce, httpService) {
+angular.module('MetronicApp').controller('StudyCenterController', function($rootScope, $scope, $http, $timeout,$sce, $q, $uibModal, httpService, SweetAlert) {
     $scope.data = {
         currentGroup: '',
         courseList: []
@@ -9,12 +9,12 @@ angular.module('MetronicApp').controller('StudyCenterController', function($root
         1: '同学们，你们真棒',
         2: '同学们，要多做记录',
         3: '同学们，要多观察勤思考',
-        4: '同学们，要抓紧事件了'
+        4: '同学们，要抓紧时间了'
     };
     var ws;
     connectSocket();
     function connectSocket(){
-        ws = new WebSocket("ws://192.168.0.117:8400");
+        ws = new WebSocket(CL_config.socketServiceUrl);
         ws.onopen = function(e){
             $scope.sendMsg(true);
         };
@@ -23,8 +23,14 @@ angular.module('MetronicApp').controller('StudyCenterController', function($root
                 $scope.data.messages.push(JSON.parse(e.data));
             });
         };
-        ws.onerror = function(){
+        ws.onerror = function(e){
+            console.error(e);
             ws.close();
+        }
+
+        ws.onclose = function(e){
+            console.error('连接断开。。。');
+            console.error(e);
         }
 
         document.addEventListener('hashchange', function(e){
@@ -43,6 +49,15 @@ angular.module('MetronicApp').controller('StudyCenterController', function($root
         initCourseGroups(res[0], true);
     });
 
+
+    httpService.get('api/BasicSetInfoI/GetSchoolConfigEvaluate', {
+        schoolFID: $rootScope.userInfo.SchoolFID
+    }).then(function(res){
+        $scope.data.EvaluateStar = res.StarValue || 10;
+    }, function(){
+        $scope.data.EvaluateStar = 10;
+    });
+
     function initCourseGroups(course, isInit){
         if(course.groupList) {
             return;
@@ -56,7 +71,7 @@ angular.module('MetronicApp').controller('StudyCenterController', function($root
                 course.courseGroups = [];
             }
             if(isInit) {
-                $scoep.setCurrentGroup(null, course.courseGroups[0]);
+                $scope.setCurrentGroup(null, course.courseGroups[0]);
                 course.isOpend = true;
             }
         }, function(){
@@ -93,6 +108,10 @@ angular.module('MetronicApp').controller('StudyCenterController', function($root
         $scope.data.totalMessagePages = 1;
         $scope.data.currentGroupMember = '';
         $scope.data.groupMembers = [];
+        $scope.data.thinkCurrentMember = '';
+        $scope.data.thinkTplList = [];
+        $scope.data.groupCanPraise = false;
+        $scope.data.currentMemberThinkContent = '';
     }
 
     function loadCurrentGroupData(){
@@ -117,6 +136,15 @@ angular.module('MetronicApp').controller('StudyCenterController', function($root
         }, function(){
             $scope.data.groupMembers = [];
         });
+        //获取老师是否可以打分
+        httpService.get('api/CourseGroup/IsPraiseReflect', {
+            groupFID: $scope.data.currentGroup.FlnkID
+        }).then(function(res){
+            $scope.data.groupCanPraise = true;
+        }, function(){
+            $scope.data.groupCanPraise = false;
+        });
+        $scope.setThinkCurrentMember('');
     }
 
     $scope.setCurrentMember = function(member){
@@ -163,6 +191,14 @@ angular.module('MetronicApp').controller('StudyCenterController', function($root
         });
     }
 
+    $scope.showPracticeResult = function(){
+        $scope.practiceModal = $uibModal.open({
+            templateUrl: 'practiceResult',
+            scope: $scope,
+            controller: 'showResultCtrl'
+        });
+    };
+
     $scope.trustSrc = function(url){
         return $sce.trustAsResourceUrl(url);
     };
@@ -206,6 +242,139 @@ angular.module('MetronicApp').controller('StudyCenterController', function($root
     };
 
     $scope.setThinkCurrentMember = function(member){
+        $scope.data.thinkCurrentMember = member;
+        if(member) {
+            httpService.get('api/CourseGroup/GetCrouseGroupReflectInfo', {
+                userFID: member.MemberFID,
+                groupFID: $scope.data.currentGroup.FlnkID
+            }).then(function(res){
+                $scope.data.currentMemberThinkContent = res.ReflectContent;
+            }, function(){
+                $scope.data.currentMemberThinkContent = '';
+            });
+        }
+        loadThinkRecord().then(function(res){
+            loadMemberThinkRecord().then(function(memberRes){
+                if(memberRes && memberRes.length > 0) {
+                    _.each(res, function(cateItem){
+                        _.each(cateItem.modelList, function(modelItem){
+                            var data = _.find(memberRes, function(item){
+                                return item.ReflectCategory === cateItem.FlnkID && item.ReflectFID === modelItem.FlnkID;
+                            });
+                            modelItem.StarValue = data && data.StarValue || 0;
+                            modelItem.EvaluateFlnkID = data && data.FlnkID;
+                        });
+                    });
+                    $scope.data.thinkTplList = res;
+                } else {
+                    $scope.data.thinkTplList = res;
+                }
+            }, function(){
+                $scope.data.thinkTplList = res;
+            });
+        });
+    };
 
+    function loadThinkRecord() {
+        loadThinkRecord.caches = loadThinkRecord.caches || {};
+        var defer = $q.defer();
+        if(loadThinkRecord.caches[$scope.data.currentGroup.CourseFID]) {
+            defer.resolve(loadThinkRecord.caches[$scope.data.currentGroup.CourseFID])
+        }else {
+            httpService.get('api/CourseManage/GetListCourseReflectConfigDetails', {
+                courseFID: $scope.data.currentGroup.CourseFID
+            }).then(function(res){
+                _.each(res, function(cateItem){
+                    _.each(cateItem.modelList, function(modelItem){
+                        modelItem.StarValue = 0;
+                    });
+                });
+                loadThinkRecord.caches[$scope.data.currentGroup.CourseFID] = res;
+                defer.resolve(res);
+            }, function(res){
+                loadThinkRecord.caches[$scope.data.currentGroup.CourseFID] = [];
+                defer.resolve([]);
+            });
+        }
+        return defer.promise;
+    }
+
+    function loadMemberThinkRecord() {
+        var defer = $q.defer();
+        httpService.get('api/CourseGroup/GetListTeacherCrouseGroupReflectInfoByStudent', {
+            groupFID: $scope.data.currentGroup.FlnkID,
+            teacherFID: $rootScope.userInfo.FlnkID,
+            studentFID: $scope.data.thinkCurrentMember && $scope.data.thinkCurrentMember.MemberFID || '',
+            courseFID: $scope.data.currentGroup.CourseFID
+        }).then(function(res){
+            defer.resolve(res);
+        }, function(){
+            defer.reject();
+        });
+        return defer.promise;
+    }
+
+    $scope.finishCourse = function(){
+        var data = [];
+        _.each($scope.data.thinkTplList, function(thinkGroup){
+            _.each(thinkGroup.modelList, function(thinkItem){
+                data.push({
+                    "FlnkID": thinkItem.EvaluateFlnkID,
+                    "GroupFID": $scope.data.currentGroup.FlnkID,
+                    "IsPerson": !!$scope.data.thinkCurrentMember,
+                    "StudentFID":  $scope.data.thinkCurrentMember &&  $scope.data.thinkCurrentMember.FlnkID,
+                    "StarValue": thinkItem.StarValue,
+                    "Modifier": $rootScope.userInfo.FlnkID,
+                    "CourseFID": $scope.data.currentGroup.CourseFID
+                });
+            });
+        });
+        httpService.post('api/CourseGroup/SavePCrouseGroupReflectScore', data).then(function(){
+            SweetAlert.success('保存评分结果成功！');
+        });
+    };
+
+    $scope.closeGroup = function(){
+        SweetAlert.confirm('即将关闭当前的任务小组，关闭之后将无法恢复，确定继续吗？').then(function(res){
+            if(res.dismiss === 'cancel') return;
+            httpService.post('api/CourseGroup/CloseCourseGroup ', {
+                FLnkID: $scope.data.currentGroup.FlnkID
+            }).then(function(){
+                SweetAlert.success('关闭课程任务小组成功！');
+            });
+        });
+    };
+});
+
+angular.module('MetronicApp').controller('showResultCtrl', function($scope, httpService){
+    httpService.get('api/CourseGroup/GetCourseGroupWorkArrangeInfoByStudent', {
+        groupFID: $scope.data.currentGroup.FlnkID,
+        userFID: $scope.data.currentGroupMember && $scope.data.currentGroupMember.MemberFID || ''
+    }).then(function(res){
+        _.each(res, function(item){
+            _.each(item.WorkArrangeList, function(arrange){
+                arrange.MessageBody = JSON.parse(arrange.MessageBody);
+                arrange.MessageBody = arrange.MessageBody.MessageBody;
+            });
+        });
+        $scope.currentStuResult = res;
+    }, function(){
+        $scope.currentStuResult = [];
+    });
+    if($scope.data.currentGroupMember) {
+        httpService.get('api/CourseGroup/GetCrouseGroupReflectInfo', {
+            userFID: $scope.data.currentGroupMember && $scope.data.currentGroupMember.MemberFID || '',
+            groupFID: $scope.data.currentGroup.FlnkID
+        }).then(function(res){
+            $scope.modalStuThinkContent = res.ReflectContent;
+        }, function(){
+            $scope.modalStuThinkContent = '';
+        });
+    }else {
+        $scope.modalStuThinkContent = '';
+    }
+
+    $scope.close = function(){
+        $scope.practiceModal && $scope.practiceModal.close();
     };
 });

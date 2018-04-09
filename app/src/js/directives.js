@@ -74,12 +74,16 @@ MetronicApp.directive('star', function () {
         scope: {
             current: '=',
             max: '=',
-            clickCb: '&'
+            clickCb: '&',
+            disable: '=',
+            disableTip: '@'
         },
-        controller: ['$scope',function ($scope) {
-            console.log($scope.current)
-            console.log($scope.max)
+        controller: ['$scope', 'SweetAlert',function ($scope, SweetAlert) {
             $scope.minusStarVal = function (index) {
+                if($scope.disable) {
+                    $scope.disableTip && SweetAlert.error($scope.disableTip);
+                    return;
+                }
                 $scope.current = index + 1;
                 $scope.clickCb({
                     data: $scope.current
@@ -89,6 +93,10 @@ MetronicApp.directive('star', function () {
                 return new Array(n);
             };
             $scope.addStarVal = function(index){
+                if($scope.disable) {
+                    $scope.disableTip && SweetAlert.error($scope.disableTip);
+                    return;
+                }
                 $scope.current += index + 1;
                 $scope.clickCb({
                     data: $scope.current
@@ -124,6 +132,102 @@ MetronicApp.directive('scrollUp', function () {
                     lastOffsetTop = $(this).scrollTop();
                 }
             })())
+        }
+    };
+});
+
+MetronicApp.directive('bgCarousel', function () {
+    return {
+        scope: {
+            list: '='
+        },
+        link: function (scope, elem, attr) {
+            var carouselContainer = $(elem).find('.carousel-container');
+            var containerWidth = carouselContainer.width();
+            var pagesize = 1;
+            var isScrolling = false;
+            var ul = $(elem).find('ul');
+            scope.$watch('list', function(val){
+                pagesize = 1;
+                isScrolling = false;
+                ul.css('left', 0);
+            });
+            ul.css({
+                position: 'relative',
+                width: 9999
+            });
+            carouselContainer.css({
+                overflow: 'hidden'
+            });
+            $('<div class="glyphicon glyphicon-chevron-left">').css({
+                'position': 'absolute',
+                left: 0,
+                top: '50%',
+                cursor: 'pointer',
+                zIndex: '10',
+                transform: 'translate3d(0, -50%, 0)'
+            }).appendTo($(elem)).on('click', function(e){
+                e.preventDefault();
+                e.stopPropagation();
+                handleScroll(-1);
+            });
+            $('<div class="glyphicon glyphicon-chevron-right">').css({
+                'position': 'absolute',
+                right: 0,
+                top: '50%',
+                cursor: 'pointer',
+                zIndex: '10',
+                transform: 'translate3d(0, -50%, 0)'
+            }).appendTo($(elem)).on('click', function(e){
+                e.preventDefault();
+                e.stopPropagation();
+                handleScroll(1);
+            });
+
+            function handleScroll(direction){
+                if(isScrolling) {
+                    return;
+                }
+                var liItems = $(elem).find('li');
+                $.each(liItems, function(index, item){
+                    $(this).css({
+                        width: '75px',
+                        'text-align': 'center',
+                        'padding-left': 0,
+                        'padding-right': 0,
+                        'margin-left': '0'
+                    })
+                });
+                var size = liItems.length;
+                var itemWidth = liItems.width();
+                var countPerPage = Math.floor(containerWidth / itemWidth);
+                var totalPage = Math.ceil(size / countPerPage);
+                if(direction < 0) {
+                    // 向左
+                    if(pagesize === 1) {
+                        return;
+                    }
+                    pagesize--;
+                    var leftScrollWidth = -1 * (pagesize - 1) * countPerPage * itemWidth;
+                    isScrolling = true;
+                    ul.animate({
+                        left: leftScrollWidth + 'px'
+                    }, 200, function(){
+                        isScrolling = false;
+                    });
+                }else if(direction > 0) {
+                    // 向右
+                    if(pagesize >= totalPage) return;
+                    pagesize++;
+                    var leftScrollWidth = -1 * (pagesize - 1) * countPerPage * itemWidth;
+                    isScrolling = true;
+                    ul.animate({
+                        left: leftScrollWidth + 'px'
+                    }, 200, function(){
+                        isScrolling = false;
+                    });
+                }
+            }
         }
     };
 });
