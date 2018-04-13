@@ -16,6 +16,7 @@ angular.module('MetronicApp').controller('StudyCenterController', function($root
     function connectSocket(){
         ws = new WebSocket(CL_config.socketServiceUrl);
         ws.onopen = function(e){
+            console.log('socket open...', +new Date());
             $scope.sendMsg(true);
         };
         ws.onmessage = function(e){
@@ -29,7 +30,8 @@ angular.module('MetronicApp').controller('StudyCenterController', function($root
         }
 
         ws.onclose = function(e){
-            console.error('连接断开。。。');
+            console.log('socket close...', +new Date());
+            console.error('连接断开。。。')
             console.error(e);
         }
 
@@ -132,7 +134,9 @@ angular.module('MetronicApp').controller('StudyCenterController', function($root
         httpService.get('api/CourseGroup/GetListGroupMembersByGroup', {
             groupFID: $scope.data.currentGroup.FlnkID
         }).then(function(res){
-            $scope.data.groupMembers = res;
+            $scope.data.groupMembers = _.filter(res, function(item){
+                return item.MemberIdentity === 3;
+            });
         }, function(){
             $scope.data.groupMembers = [];
         });

@@ -37,7 +37,11 @@ $(function(){
             SFZH: idCard,
             LoginPwd: pwd
         }).then(function(res){
-            window.location.href = 'login.html';
+            if(res.Flag) {
+                window.location.href = 'login.html';
+            }else {
+                alert(res.Message);
+            }
         }, function(){
             alert('绑定失败，请重试！');
         });
