@@ -55,7 +55,7 @@ angular.module('MetronicApp', ['720kb.datepicker']).controller('CourseController
             return;
         }else {
             var defer;
-            if(+$rootScope.userInfo.RoleNum === 1) {
+            if(+$rootScope.userInfo.IsMaster === 1) {
                 defer = httpService.get('api/CourseInfo/GetCourseInfoByCategoryID', {
                     CourseCategoryFID: cate.FlnkID
                 })

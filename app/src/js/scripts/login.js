@@ -12,7 +12,11 @@ $(function(){
                 var userInfo = res.ResultObj;
                 $.cookie('userId', userInfo.FlnkID);
                 localStorage.setItem('userInfo', JSON.stringify(userInfo));
-                window.location.replace('index.html#/study-center.html');
+                if(userInfo.RoleNum === 0) {
+                    window.location.replace('index.html#/user-manage.html');
+                }else {
+                    window.location.replace('index.html#/study-center.html');
+                }
             }else {
                 alert('登陆失败');
             }
