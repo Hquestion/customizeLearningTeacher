@@ -1,0 +1,29 @@
+<div class="portlet light bordered">
+    <div class="portlet-title">
+        <h4 class="pull-left">小组有反思详情</h4>
+    </div>
+    <div class="portlet-body">
+        <div class="overflow-h" bg-carousel list="data.groupMembers" style="position: relative;padding: 0 15px;">
+            <div class="carousel-container">
+                <ul class="nav nav-pills">
+                    <li role="presentation" ng-repeat="member in data.groupMembers track by $index"
+                        ng-class="{'active': data.thinkCurrentMember.MemberFID === member.MemberFID}"
+                        ng-click="setThinkCurrentMember(member)">
+                        <a ng-bind="member.MemberName"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="portlet light" ng-show="!!data.thinkCurrentMember">
+            <div class="portlet-title">
+                <h4>我的反思</h4>
+            </div>
+            <div class="portlet-body">
+                <div ng-bind="data.currentMemberThinkContent" ng-if="data.currentMemberThinkContent"></div>
+                <div class="text-stat" style="color: #999;" ng-if="!data.currentMemberThinkContent">
+                    学生暂未填写反思内容
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

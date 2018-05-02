@@ -93,6 +93,8 @@ angular.module('MetronicApp', ['720kb.datepicker']).controller('CourseController
                 $scope.data.currentCourse.HeadTeacherName = item.XM;
             }
         });
+        var helpTeacherNames = _.map($scope.data.currentCourse.helpTeacherList, function(item){return item.TeacherName}).join(',');
+        $scope.data.currentCourse.CoordTeachers = helpTeacherNames;
         httpService.post('api/CourseInfo/SaveCourseInfo', {
             CourseInfo: $scope.data.currentCourse,
             ListCoordinationTeacher: $scope.data.currentCourse.helpTeacherList
@@ -572,7 +574,7 @@ angular.module('MetronicApp').controller('editHelpTeacherCtrl', function($rootSc
         });
     };
     $scope.addHelpTeacher = function(){
-        var selectedTeachers = $scope.filtTeacherList.filter(function(item){
+        var selectedTeachers = $scope.originTeacherList.filter(function(item){
             return !!item.isSelected;
         });
         var newHelpTeachers = _.map(selectedTeachers, function(item){

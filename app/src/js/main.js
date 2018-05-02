@@ -238,6 +238,25 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                 }]
             }
         })
+        .state('view-think', {
+            url: '/view-think.html',
+            templateUrl: "src/views/view-think.html",
+            data: {pageTitle: '学生有反思'},
+            controller: "ViewThinkController",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'MetronicApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                            'assets/apps/css/user-manage.css',
+
+                            'src/js/controllers/ViewThinkController.js'
+                        ]
+                    });
+                }]
+            }
+        })
 }]);
 
 /* Init global settings and run the app */
