@@ -101,7 +101,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
-                                                <div class="well-sm">
+                                                <div class="well-sm" style="word-break: break-all;line-height: 1;">
                                                     <div ng-if="msg.MessageBody.msgtype=== '1'">
                                                         {{msg.MessageBody.msgcontent}}
                                                     </div>
@@ -148,7 +148,7 @@
                     <div class="portlet light bordered">
                         <div class="portlet-title">
                             <h4 class="pull-left">有反思</h4>
-                            <a class="btn btn-circle btn-success" href="/#/view-think.html?groupId={{data.currentGroup.FlnkID}}" target="_blank">查看有反思</a>
+                            <a class="btn btn-circle btn-success" ui-sref="view-think({groupId:data.currentGroup.FlnkID})" target="_blank">查看有反思</a>
                             <div class="pull-right" style="font-size: 30px">
                                 <a class="glyphicon glyphicon-ok text-success" title="完成课程" ng-click="finishCourse()" ng-show="data.groupCanPraise"></a>
                                 <a class="glyphicon glyphicon-remove text-danger" title="关闭课程任务小组" ng-click="closeGroup()"></a>
@@ -212,20 +212,23 @@
     <div class="practice-result portlet light">
         <div class="form-group" ng-repeat="resultItem in currentStuResult track by $index">
             <h4>
-                步骤{{resultItem.ArrangeSortCode}}、{{resultItem.ArrangeName}}
+                步骤{{resultItem.SortCode}}、{{resultItem.ArrangeName}}
             </h4>
-            <div class="well-sm" ng-repeat="arrangeSub in resultItem.WorkArrangeList track by $index">
-                <div ng-if="arrangeSub.MessageBody.msgtype=== '1'">
-                    {{arrangeSub.MessageBody.msgcontent}}
-                </div>
-                <div ng-if="arrangeSub.MessageBody.msgtype=== '2'">
-                    <img ng-src="{{arrangeSub.MessageBody.msgcontent}}" style="max-width: 100%;">
-                </div>
-                <div ng-if="arrangeSub.MessageBody.msgtype=== '3'">
-                    <video ng-src="{{trustSrc(arrangeSub.MessageBody.msgcontent)}}" controls></video>
-                </div>
-                <div ng-if="arrangeSub.MessageBody.msgtype=== '4'">
-                    <audio ng-src="{{trustSrc(arrangeSub.MessageBody.msgcontent)}}" controls></audio>
+            <div ng-repeat="model in resultItem.modelList track by $index">
+                <div class="sub-step-name">{{model.GroupArrangeItemContent}}</div>
+                <div class="well-sm" ng-repeat="arrangeSub in model.WorkArrangeList track by $index">
+                    <div ng-if="arrangeSub.MessageBody.msgtype=== '1'">
+                        {{arrangeSub.MessageBody.msgcontent}}
+                    </div>
+                    <div ng-if="arrangeSub.MessageBody.msgtype=== '2'">
+                        <img ng-src="{{arrangeSub.MessageBody.msgcontent}}" style="max-width: 100%;">
+                    </div>
+                    <div ng-if="arrangeSub.MessageBody.msgtype=== '3'">
+                        <video ng-src="{{trustSrc(arrangeSub.MessageBody.msgcontent)}}" controls></video>
+                    </div>
+                    <div ng-if="arrangeSub.MessageBody.msgtype=== '4'">
+                        <audio ng-src="{{trustSrc(arrangeSub.MessageBody.msgcontent)}}" controls></audio>
+                    </div>
                 </div>
             </div>
         </div>

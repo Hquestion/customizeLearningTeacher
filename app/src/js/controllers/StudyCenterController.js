@@ -356,9 +356,11 @@ angular.module('MetronicApp').controller('showResultCtrl', function($scope, http
         userFID: $scope.data.currentGroupMember && $scope.data.currentGroupMember.MemberFID || ''
     }).then(function(res){
         _.each(res, function(item){
-            _.each(item.WorkArrangeList, function(arrange){
-                arrange.MessageBody = JSON.parse(arrange.MessageBody);
-                arrange.MessageBody = arrange.MessageBody.MessageBody;
+            _.each(item.modelList, function(model){
+                _.each(model.WorkArrangeList, function(arrange){
+                    arrange.MessageBody = JSON.parse(arrange.MessageBody);
+                    arrange.MessageBody = arrange.MessageBody.MessageBody;
+                });
             });
         });
         $scope.currentStuResult = res;

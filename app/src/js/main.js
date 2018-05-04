@@ -239,7 +239,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
             }
         })
         .state('view-think', {
-            url: '/view-think.html',
+            url: '/view-think.html?groupId',
             templateUrl: "src/views/view-think.html",
             data: {pageTitle: '学生有反思'},
             controller: "ViewThinkController",
