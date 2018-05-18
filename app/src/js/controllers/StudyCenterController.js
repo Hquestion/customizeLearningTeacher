@@ -4,6 +4,15 @@ angular.module('MetronicApp').controller('StudyCenterController', function($root
         courseList: []
     };
 
+    $scope.$on("DOMContentLoaded", function(){
+        $('[data-magnify]').magnify({
+            headToolbar: [
+                'close'
+            ],
+            initMaximized: true
+        });
+    });
+
     var MESSAGE_PAGE_SIZE = 20;
     var FAST_MSG_TYPE = {
         1: '同学们，你们真棒',

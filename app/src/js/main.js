@@ -188,7 +188,8 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                         files: [
                             'assets/apps/css/study-center.css',
 
-                            'src/js/controllers/StudyCenterController.js'
+                            'assets/apps/scripts/jquery.magnify.min.js',
+                            'src/js/controllers/StudyCenterController.js',
                         ]
                     });
                 }]

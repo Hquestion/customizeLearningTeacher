@@ -1,7 +1,7 @@
 <div class="study-center">
     <div class="row">
-        <div class="pull-left col-md-3 course-tree">
-            <div class="portlet light bordered">
+        <div class="pull-left col-md-2 course-tree">
+            <div class="portlet light bordered" style="padding: 0;">
                 <dl>
                     <dt class="course-item" ng-repeat="course in data.courseList track by $index"
                         ng-class="{'active': data.currentGroup.CourseFID === course.FlnkID, 'opend': !!course.isOpend}"
@@ -24,7 +24,7 @@
                 </dl>
             </div>
         </div>
-        <div class="overflow-h col-md-9" ng-show="!!data.currentGroup">
+        <div class="overflow-h col-md-10" ng-show="!!data.currentGroup">
             <div class="row">
                 <div class="col-md-4">
                     <div class="portlet light bordered" style="height: 600px;">
@@ -66,10 +66,10 @@
                     <div class="portlet light bordered" style="height: 600px;overflow: auto">
                         <div class="portlet-title">
                             <h4 class="pull-left">能落实</h4>
-                            <div class="btn btn-success btn-circle pull-right" ng-click="showPracticeResult()">查看成果</div>
+                            <div class="btn btn-success btn-circle pull-right" ng-click="showPracticeResult()" style="border-radius: 5px !important;">查看成果</div>
                         </div>
                         <div class="portlet-body">
-                            <div class="row">
+                            <div class="row" style="margin-left: 0;margin-right: 0;">
                                 <div class="col-md-2" style="padding:10px 0;">小组成员</div>
                                 <div class="col-md-10 overflow-h" bg-carousel  list="data.groupMembers">
                                     <div class="carousel-container" style="position: relative;">
@@ -85,7 +85,7 @@
                                 </div>
                             </div>
                             <div class="msg-block">
-                                <div class="row btn-success" style="padding: 10px 0;color: #fff;">
+                                <div class="row btn-success" style="padding: 10px 0;color: #fff;margin-left: 0;margin-right: 0;">
                                     <div class="col-md-2">姓名</div>
                                     <div class="col-md-6">内容</div>
                                     <div class="col-md-4">时间</div>
@@ -96,17 +96,19 @@
                                     <div class="form-group" ng-repeat="msg in data.messages track by $index">
                                         <div class="row">
                                             <div class="col-md-2">
-                                                <div style="padding: 8px 0;">
+                                                <div style="padding: 8px 0;color:#0b94ea;">
                                                 {{msg.UserName}}
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="well-sm" style="word-break: break-all;line-height: 1;">
-                                                    <div ng-if="msg.MessageBody.msgtype=== '1'">
+                                                    <div ng-if="msg.MessageBody.msgtype=== '1'" style="line-height: 1.4">
                                                         {{msg.MessageBody.msgcontent}}
                                                     </div>
                                                     <div ng-if="msg.MessageBody.msgtype=== '2'">
-                                                        <img ng-src="{{msg.MessageBody.msgcontent}}" style="max-width: 100%;">
+                                                        <a href="{{msg.MessageBody.msgcontent}}" data-magnify="gallery">
+                                                            <img ng-src="{{msg.MessageBody.msgcontent}}" style="max-width: 100%;">
+                                                        </a>
                                                     </div>
                                                     <div ng-if="msg.MessageBody.msgtype=== '3'">
                                                         <video ng-src="{{trustSrc(msg.MessageBody.msgcontent)}}" style="max-width: 100%;" controls></video>
@@ -124,13 +126,13 @@
                                 </div>
                                 <div style="margin-top: 15px;" ng-show="data.currentGroup.Status === 0">
                                     <div class="row">
-                                        <div class="col-md-4" style="font-size: 26px;">
-                                            <a class="glyphicon glyphicon-thumbs-up" ng-click="sendFastMsg(1)"></a>
-                                            <a class="glyphicon glyphicon-camera" ng-click="sendFastMsg(2)"></a>
-                                            <a class="glyphicon glyphicon-book" ng-click="sendFastMsg(3)"></a>
-                                            <a class="glyphicon glyphicon-time" ng-click="sendFastMsg(4)"></a>
+                                        <div class="col-md-3" style="font-size: 26px;">
+                                            <a class="glyphicon glyphicon-thumbs-up" ng-click="sendFastMsg(1)" title="同学们，你们真棒"></a>
+                                            <a class="glyphicon glyphicon-camera" ng-click="sendFastMsg(2)" title="同学们，要多做记录"></a>
+                                            <a class="glyphicon glyphicon-book" ng-click="sendFastMsg(3)" title="同学们，要多观察勤思考"></a>
+                                            <a class="glyphicon glyphicon-time" ng-click="sendFastMsg(4)" title="同学们，要抓紧时间了"></a>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-9">
                                             <div class="input-group">
                                                 <input type="text" class="form-control" ng-model="tempMsg">
                                                 <span class="input-group-addon btn btn-success" ng-click="sendMsg()">发送</span>
@@ -148,7 +150,7 @@
                     <div class="portlet light bordered">
                         <div class="portlet-title">
                             <h4 class="pull-left">有反思</h4>
-                            <a class="btn btn-circle btn-success" ui-sref="view-think({groupId:data.currentGroup.FlnkID})" target="_blank">查看有反思</a>
+                            <a class="btn btn-circle btn-success" ui-sref="view-think({groupId:data.currentGroup.FlnkID})" target="_blank" style="border-radius: 5px !important;margin-left: 10px;">查看有反思</a>
                             <div class="pull-right" style="font-size: 30px">
                                 <a class="glyphicon glyphicon-ok text-success" title="完成课程" ng-click="finishCourse()" ng-show="data.groupCanPraise"></a>
                                 <a class="glyphicon glyphicon-remove text-danger" title="关闭课程任务小组" ng-click="closeGroup()"></a>
@@ -178,19 +180,21 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="portlet light" ng-repeat="think in data.thinkTplList track by $index">
-                                <div class="portlet-title">
-                                    <h4>{{think.ReflectName}}</h4>
-                                </div>
-                                <div class="portlet-body">
-                                    <div class="form-group" ng-repeat="thinkItem in think.modelList track by $index">
-                                        <div class="row">
-                                            <div class="col-md-3" style="height: 40px;line-height: 40px;">
-                                                <div>{{thinkItem.ReflectItemName}}</div>
-                                            </div>
-                                            <div class="col-md-7">
-                                                <!--<star max="data.EvaluateStar" current="thinkItem.StarValue" disable="data.groupCanPraise" disable-tip="暂时无法打分，还有部分学生没有提交反思结果"></star>-->
-                                                <star max="data.EvaluateStar" current="thinkItem.StarValue" disable="!data.groupCanPraise" disable-tip="暂时无法打分，还有部分学生没有提交反思结果"></star>
+                            <div class="row light">
+                                <div class="portlet light col-md-6" ng-repeat="think in data.thinkTplList track by $index">
+                                    <div class="portlet-title sub-title">
+                                        <h4>{{think.ReflectName}}</h4>
+                                    </div>
+                                    <div class="portlet-body">
+                                        <div class="form-group" ng-repeat="thinkItem in think.modelList track by $index">
+                                            <div class="row">
+                                                <div class="col-md-3" style="height: 40px;line-height: 40px;">
+                                                    <div>{{thinkItem.ReflectItemName}}</div>
+                                                </div>
+                                                <div class="col-md-7">
+                                                    <!--<star max="data.EvaluateStar" current="thinkItem.StarValue" disable="data.groupCanPraise" disable-tip="暂时无法打分，还有部分学生没有提交反思结果"></star>-->
+                                                    <star max="data.EvaluateStar" current="thinkItem.StarValue" disable="!data.groupCanPraise" disable-tip="暂时无法打分，还有部分学生没有提交反思结果"></star>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
