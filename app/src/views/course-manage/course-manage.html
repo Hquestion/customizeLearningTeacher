@@ -99,7 +99,12 @@
                                             <label>课程时长</label>
                                         </div>
                                         <div class="col-md-7">
-                                            <input class="input-md form-control" type="number" placeholder="不填表示不限时长" ng-model="data.currentCourse.CourseDuration">
+                                            <div class="input-group">
+                                                <input class="input-md form-control" type="number" placeholder="不填表示不限时长" ng-model="data.currentCourse.CourseDuration">
+                                                <span class="input-group-addon">
+                                                    天
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -137,7 +142,12 @@
                                             <label for="groupNum">小组人数</label>
                                         </div>
                                         <div class="col-md-7">
-                                            <input class="input-md form-control" type="number" id="groupNum" ng-model="data.currentCourse.GroupNum" placeholder="不填表示不限制人数">
+                                            <div class="input-group">
+                                                <input class="input-md form-control" type="number" id="groupNum" ng-model="data.currentCourse.GroupNum" placeholder="不填表示不限制人数">
+                                                <span class="input-group-addon">
+                                                    人
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
