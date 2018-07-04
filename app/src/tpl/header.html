@@ -40,7 +40,7 @@
         <!-- DOC: Remove dropdown-menu-hover and data-close-others="true" attributes below to disable the dropdown opening on mouse hover -->
         <div class="hor-menu">
             <ul class="nav navbar-nav">
-                <li ng-show="userInfo.RoleNum !== 0">
+                <li>
                     <a href="#/study-center.html">学习中心</a>
                 </li>
                 <li ng-show="userInfo.RoleNum !== 0">
@@ -48,6 +48,9 @@
                 </li>
                 <li ng-show="userInfo.RoleNum === 0">
                     <a href="#/user-manage.html">用户管理</a>
+                </li>
+                <li>
+                    <a href="#/report.html">监控中心</a>
                 </li>
                 <li ng-show="userInfo.RoleNum !== 0">
                     <a href="#/setting.html">系统设置</a>

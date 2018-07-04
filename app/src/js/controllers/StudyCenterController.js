@@ -266,6 +266,7 @@ angular.module('MetronicApp').controller('StudyCenterController', function($root
                 $scope.data.currentMemberThinkContent = '';
             });
         }
+        loadRadarData();
         loadThinkRecord().then(function(res){
             loadMemberThinkRecord().then(function(memberRes){
                 if(memberRes && memberRes.length > 0) {
@@ -287,6 +288,54 @@ angular.module('MetronicApp').controller('StudyCenterController', function($root
             });
         });
     };
+
+    function loadRadarData(){
+        httpService.post('api/Report/GetReportByObjectDictionary', {
+            storename: 'Proc_CrouseGroupReflectScore',
+            groupid: $scope.data.currentGroup.FlnkID,
+            userid: $scope.data.thinkCurrentMember && $scope.data.thinkCurrentMember.MemberFID || ''
+        }).then(function(res){
+            var indicators = _.map(res, function(item){
+                return {
+                    name: item.ReflectCategoryName,
+                    max: item.TotalStarValue
+                }
+            });
+            var seriesValue = _.map(res, function(item){
+                return item.StarValue;
+            });
+            var option = {
+                tooltip: {},
+                radar: {
+                    name: {
+                        textStyle: {
+                            color: '#fff',
+                            backgroundColor: '#999',
+                            borderRadius: 3,
+                            padding: [3, 5]
+                        }
+                    },
+                    indicator: indicators
+                },
+                series: [{
+                    name: '能力图谱',
+                    type: 'radar',
+                    // areaStyle: {normal: {}},
+                    data : [
+                        {
+                            value : seriesValue,
+                            name : '平均得分'
+                        }
+                    ]
+                }]
+            };
+            $(function(){
+                var myChart = echarts.init(document.getElementById('radar-container'));
+                console.log(JSON.stringify(option));
+                myChart.setOption(option);
+            })
+        });
+    }
 
     function loadThinkRecord() {
         loadThinkRecord.caches = loadThinkRecord.caches || {};
@@ -357,6 +406,27 @@ angular.module('MetronicApp').controller('StudyCenterController', function($root
             });
         });
     };
+
+    $scope.deleteGroup = function(){
+        SweetAlert.confirm('即将删除当前的任务小组（《'+$scope.data.currentGroup.CourseName+'》--'+$scope.data.currentGroup.GroupName+'），删除之后将无法恢复，确定继续吗？').then(function(res){
+            if(res.dismiss === 'cancel') return;
+            httpService.post('api/CourseGroup/DeleteCourseGroup', {
+                "studentFID": "",
+                "groupFID": $scope.data.currentGroup.FlnkID,
+                "CourseFID": $scope.data.currentGroup.CourseFID
+            }).then(function(){
+                SweetAlert.success('删除课程任务小组成功！');
+                var currentCourse = _.find(this.data.courseList, function(item, index){
+                    return item.FlnkID === $scope.data.currentGroup.CourseFID;
+                });
+                var index = _.findIndex(currentCourse.courseGroups, function(item){
+                    return item.FlnkID ===  $scope.data.currentGroup.FlnkID;
+                });
+                currentCourse.splice(index, 1);
+                $scope.setCurrentGroup(null, currentCourse.courseGroups[0]);
+            });
+        });
+    }
 });
 
 angular.module('MetronicApp').controller('showResultCtrl', function($scope, httpService){

@@ -258,6 +258,25 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                 }]
             }
         })
+        .state('report', {
+            url: '/report.html',
+            templateUrl: "src/views/report.html",
+            data: {pageTitle: '监控中心'},
+            controller: "ReportController",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'MetronicApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                            'assets/apps/css/report.css',
+
+                            'src/js/controllers/ReportController.js'
+                        ]
+                    });
+                }]
+            }
+        })
 }]);
 
 /* Init global settings and run the app */

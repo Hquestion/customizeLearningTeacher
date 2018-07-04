@@ -1,0 +1,70 @@
+<div class="report">
+    <div class="row">
+        <div class="pull-left col-md-3">
+            <div class="portlet light bordered course-tree">
+                <dl>
+                    <dt class="course-category-item" ng-repeat="grade in data.gradeList track by $index"
+                        ng-class="{'active': data.currentGrade.GradeNo === grade.GradeNo, 'opend': !!grade.isOpend}"
+                        ng-click="changeGrade(grade)">
+                        <div class="cate-name">
+                            <i class="glyphicon" ng-class="!!grade.isOpend ? 'glyphicon-folder-open': 'glyphicon-folder-close'"></i>
+                            <span ng-bind="grade.GradeName"></span>
+                            <i class="glyphicon pull-right" ng-class="!!grade.isOpend ? 'glyphicon-menu-down': 'glyphicon-menu-left'"></i>
+                        </div>
+                        <dl class="list-group" ng-show="grade.isOpend">
+                            <dt class="course-item" ng-repeat="klass in grade.classList track by $index"
+                                ng-class="data.currentClass.ClassNo === klass.ClassNo ? 'active': ''"
+                                ng-click="changeClass(grade, klass, $event)">
+                                <div class="course-name" ng-class="data.currentClass.ClassNo === klass.ClassNo ? 'active': ''">
+                                    <i class="glyphicon glyphicon-bookmark"></i>
+                                    <span ng-bind="klass.ClassName"></span>
+                                    <i class="glyphicon pull-right" ng-class="!!klass.isOpend ? 'glyphicon-menu-down': 'glyphicon-menu-left'"></i>
+                                </div>
+                                <dl class="list-group" ng-show="klass.isOpend" style="max-height: 200px;overflow: auto">
+                                    <dt class="course-item" ng-repeat="stu in klass.stuList track by $index"
+                                        ng-class="data.currentStu.userid === stu.userid ? 'active': ''"
+                                        ng-click="changeStu(grade, klass, stu, $event)">
+                                        <div class="course-name" ng-class="data.currentStu.userid === stu.userid ? 'active': ''">
+                                            <i class="glyphicon glyphicon-bookmark"></i><span>{{stu.XM}}</span>
+                                        </div>
+                                    </dt>
+                                </dl>
+                            </dt>
+                        </dl>
+                    </dt>
+                </dl>
+            </div>
+        </div>
+        <div class="pull-right col-md-9">
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                    <h4>综合能力图谱</h4>
+                </div>
+                <div class="portlet-body" style="position: relative">
+                    <div id="general-radar-area" style="width: 100%;height: 300px;">
+
+                    </div>
+                    <div ng-show="noData" style="position: absolute;text-align: center;top: 80px;width:100%;">暂无数据</div>
+                </div>
+            </div>
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                    <h4>详细能力图谱</h4>
+                </div>
+                <div class="portlet-body" style="position: relative">
+                    <div class="course-cate-box row">
+                        <div class="course-cate-item col-md-4" ng-repeat="item in data.courseCateList track by $index">
+                            <div class="cate-area" ng-class="{'active': data.currentCate.FlnkID === item.FlnkID}" ng-click="setCurrentCate(item)">
+                                {{item.CourseCategoryName}}
+                            </div>
+                        </div>
+                    </div>
+                    <div id="radar-area" style="width: 100%;height: 300px;">
+
+                    </div>
+                    <div ng-show="noDetailData" style="position: absolute;text-align: center;top: 250px;width:100%;">暂无数据</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

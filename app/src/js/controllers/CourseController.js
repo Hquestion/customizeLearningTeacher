@@ -180,11 +180,36 @@ angular.module('MetronicApp', ['720kb.datepicker']).controller('CourseController
 
     $scope.initEditor = function(){
         $scope.activateTab('2');
+
+        function Paste(e){
+            var $ele = $('<div>' + e.data.dataValue + '</div>');
+            var $imgs = $ele.find('img');
+            console.log($imgs);
+            $imgs.each(function(index, item){
+                var $img = $(this);
+                var src = $img.attr('src');
+                var newImg = $('<img>');
+                (function(data){
+                    newImg.on('load', function(e){
+                        var url = getBase64Image(newImg);
+                        data.attr('src', url);
+                        console.log(data);
+                    });
+                })($img);
+                newImg.attr('src', src);
+            });
+        }
         try {
+            if(CKEDITOR.instances["prev-know-editor"]) {
+                CKEDITOR.instances["prev-know-editor"].destroy(true);
+            }
             CKEDITOR.replace('prev-know-editor');
         }catch (e) {
 
         }
+        // CKEDITOR.instances["prev-know-editor"].on('paste', function(e){
+        //     Paste(e);
+        // });
         if($scope.data.prevKnowContent) {
             return;
         }
@@ -316,12 +341,12 @@ angular.module('MetronicApp', ['720kb.datepicker']).controller('CourseController
                 "Modifier": $rootScope.userInfo.FlnkID,
             };
             var arrangeModel = [];
-            _.each(item.modelList, function(modelItem){
+            _.each(item.modelList, function(modelItem, index2){
                 var newModelItem = {
                     "FlnkID": modelItem.FlnkID,
                     "CourseFID": $scope.data.currentCourse.FlnkID,
                     "IsSingle": modelItem.IsSingle,
-                    "SortCode": modelItem.SortCode || 1,
+                    "SortCode": index2 + 1,
                     "Creater": $rootScope.userInfo.FlnkID,
                     "Modifier": $rootScope.userInfo.FlnkID,
                     "ArrangeFID": item.FlnkID || '',
@@ -492,6 +517,20 @@ angular.module('MetronicApp', ['720kb.datepicker']).controller('CourseController
             $scope.data.currentCourse.helpTeacherList.splice(index, 1);
         }
     };
+
+    function getBase64Image(img) {
+        var canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, img.width, img.height);
+
+        var dataURL = canvas.toDataURL("image/png");
+        return dataURL
+
+        // return dataURL.replace("data:image/png;base64,", "");
+    }
 });
 
 angular.module('MetronicApp').controller('editArrangeCtrl', function($rootScope, $scope, httpService){
