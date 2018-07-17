@@ -38,7 +38,11 @@ angular.module('MetronicApp', ['720kb.datepicker']).controller('CourseController
         for(var key in TAB_INDEX_MAP) {
             $scope[TAB_INDEX_MAP[key]] = false;
         }
-        $scope[TAB_INDEX_MAP[index]] = true;
+        setTimeout(function(){
+            $scope[TAB_INDEX_MAP[index]] = true;
+            $scope.$apply();
+        }, 100);
+        //
     };
 
     $scope.activateTab('1');
@@ -203,7 +207,9 @@ angular.module('MetronicApp', ['720kb.datepicker']).controller('CourseController
             if(CKEDITOR.instances["prev-know-editor"]) {
                 CKEDITOR.instances["prev-know-editor"].destroy(true);
             }
-            CKEDITOR.replace('prev-know-editor');
+            setTimeout(function(){
+                CKEDITOR.replace('prev-know-editor');
+            }, 100);
         }catch (e) {
 
         }
@@ -217,6 +223,9 @@ angular.module('MetronicApp', ['720kb.datepicker']).controller('CourseController
             courseFID: $scope.data.currentCourse.FlnkID
         }).then(function(res){
             $scope.data.prevKnowContent = res;
+            if(!CKEDITOR.instances["prev-know-editor"]) {
+                CKEDITOR.replace('prev-know-editor');
+            }
             CKEDITOR.instances['prev-know-editor'].setData($scope.data.prevKnowContent.KnowContent);
         }, function(){
             $scope.data.prevKnowContent = {
@@ -233,6 +242,7 @@ angular.module('MetronicApp', ['720kb.datepicker']).controller('CourseController
     $scope.savePrevKnow = function(){
         var instance = CKEDITOR.instances['prev-know-editor'];
         var content = instance.getData();
+        content = content.replace(/style="(.)*"/ig, '');
         $scope.data.prevKnowContent.KnowContent = content;
         httpService.post('api/CourseManage/OpertionTempleTable', $scope.data.prevKnowContent).then(function(res){
             SweetAlert.success('保存早知道内容成功！', {
@@ -597,14 +607,21 @@ angular.module('MetronicApp').controller('editHelpTeacherCtrl', function($rootSc
     $scope.originTeacherList = _.filter($scope.teacherList, function (item) {
         return true;
     });
-    _.each($scope.data.currentCourse.helpTeacherList, function(helpItem){
-        var helpTeacher = _.find($scope.originTeacherList, function(item){
-            return item.FlnkID === helpItem.TeacherFID;
+    if($scope.data.currentCourse.helpTeacherList && $scope.data.currentCourse.helpTeacherList.length > 0) {
+        _.each($scope.data.currentCourse.helpTeacherList, function(helpItem){
+            var helpTeacher = _.find($scope.originTeacherList, function(item){
+                return item.FlnkID === helpItem.TeacherFID;
+            });
+            if(helpTeacher) {
+                helpTeacher.isSelected = true;
+            }
         });
-        if(helpTeacher) {
-            helpTeacher.isSelected = true;
-        }
-    });
+    }else {
+        _.each($scope.originTeacherList, function(helpItem){
+            helpItem.isSelected = false;
+        });
+    }
+
     $scope.filtTeacherList = _.filter($scope.originTeacherList, function(){return true});
     $scope.searchKey = '';
     $scope.onInputSearch = function(){
