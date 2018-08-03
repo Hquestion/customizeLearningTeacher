@@ -36,7 +36,7 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <h5 class="col-md-12">
-                                            <span>步骤{{$index + 1}}、</span>
+                                            <span>{{$index + 1}}、</span>
                                             <span class="arrange-name" ng-bind="arrange.ArrangeName"></span>
                                         </h5>
                                     </div>
@@ -227,7 +227,7 @@
     <div class="practice-result portlet light">
         <div class="form-group" ng-repeat="resultItem in currentStuResult track by $index">
             <h4>
-                步骤{{resultItem.SortCode}}、{{resultItem.ArrangeName}}
+                {{resultItem.SortCode}}、{{resultItem.ArrangeName}}
             </h4>
             <div ng-repeat="model in resultItem.modelList track by $index">
                 <div class="sub-step-name">{{model.GroupArrangeItemContent}}</div>

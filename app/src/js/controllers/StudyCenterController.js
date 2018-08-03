@@ -384,7 +384,7 @@ angular.module('MetronicApp').controller('StudyCenterController', function($root
                     "FlnkID": thinkItem.EvaluateFlnkID,
                     "GroupFID": $scope.data.currentGroup.FlnkID,
                     "IsPerson": !!$scope.data.thinkCurrentMember,
-                    "StudentFID":  $scope.data.thinkCurrentMember &&  $scope.data.thinkCurrentMember.FlnkID,
+                    "StudentFID":  $scope.data.thinkCurrentMember &&  $scope.data.thinkCurrentMember.MemberFID,
                     "StarValue": thinkItem.StarValue,
                     "Modifier": $rootScope.userInfo.FlnkID,
                     "CourseFID": $scope.data.currentGroup.CourseFID

@@ -9,12 +9,13 @@ angular.module('MetronicApp', []).controller('UserManageController', function($r
     $scope.onSwitchChange = function(val){
         httpService.post('api/UserBaseInfo/SetSchoolMaster', [{
             UserFID: val.FlnkID,
-            IsMaster: val.isSelected ? 1 : 0
+            IsMaster: val.isSelected ? 1 : 0,
+            SchoolFID: $rootScope.userInfo.SchoolFID
         }]).then(function(){
             SweetAlert.success('修改管理员成功！');
         }, function(){
-            val.isSelected = false;
-            SweetAlert.error('修改管理员成功！');
+            val.isSelected = !val.isSelected ;
+            SweetAlert.error('修改管理员失败！');
         });
     };
 

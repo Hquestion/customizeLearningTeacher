@@ -16,7 +16,7 @@ angular.module('MetronicApp', ['720kb.datepicker']).controller('CourseController
         "OpenStartTime": "",
         "OpenEndTime": "",
         "SortCode": 1,
-        "IsAudited": false,
+        "IsAudited": true,
         "HeadTeacherName": "",
         "CoordTeachers": ""
     };

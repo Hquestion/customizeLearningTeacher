@@ -209,7 +209,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group" ng-show="userInfo.IsMaster === 1">
+                        <div class="form-group" style="display: none !important;">
                             <div class="row">
                                 <div class="col-md-5">
                                     <div class="row">
@@ -243,7 +243,7 @@
                             <div class="form-group" ng-repeat="arrange in data.arrangeList track by $index">
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <span>步骤{{$index + 1}}、</span>
+                                        <span>{{$index + 1}}、</span>
                                         <span class="arrange-name" ng-bind="arrange.ArrangeName"></span>
                                     </div>
                                     <div class="col-md-7">
